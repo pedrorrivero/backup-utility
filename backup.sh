@@ -4,7 +4,7 @@ SOURCE_DIR='./test'
 BACKUP_DIR='./test.backup'
 
 LOG_FILE=$(date -u '+%Y-%m-%dT%H:%M:%SZ.log')
-
+tabs 4
 
 ## ---- OPTION FLAGS ---- ##
 
@@ -25,7 +25,6 @@ option_parser () {
   case "$1" in
     -v|--verbose)
       VERBOSE='set'
-      tabs 4
       shift
       ;;
     -d|--dry-run)
@@ -45,13 +44,35 @@ option_parser () {
       WIPE='set'
       shift 2
       ;;
+    -h|--help)
+
+      echo -en "\n"
+      echo -e "BACKUP UTILITY:"\
+      "backup [options] SOURCE_DIR BACKUP_DIR"
+      echo -e "\t -v  --verbose: \t "\
+      "Log to stdout."
+      echo -e "\t -d  --dry-run: \t "\
+      "Show changes to be made without actually running them."
+      echo -e "\t -n  --no-log: \t "\
+      "Do not create log file."
+      echo -e "\t -o  --override: \t "\
+      "[directory] Discard previous backup files for a given directory."
+      echo -e "\t -w  --wipe-backup: \t "\
+      "Wipe clean all previous backups before running."
+      echo -e "\t -h  --help: \t "\
+      "Display this help. "
+      echo -en "\n"
+
+      shift
+      exit 0
+      ;;
     --) # end argument parsing
       shift
       break
       ;;
     -*|--*=) # unsupported flags
-      local log=" Error: Unsupported flag $1 "
-      echo "$(tput setaf 1)$log$(tput sgr 0)" >&2
+      local message=" Error: Unsupported flag $1 "
+      echo "$(tput setaf 1)$message$(tput sgr 0)" >&2
       exit 1
       ;;
     *) # preserve positional arguments
@@ -237,3 +258,4 @@ option_parser $@
 test ! $NO_LOG && touch $LOG_FILE 2> /dev/null
 override
 update_backup_directory $SOURCE_DIR $BACKUP_DIR
+test ! $NO_LOG && echo "Logs saved to: $LOG_FILE\n"
