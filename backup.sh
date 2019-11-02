@@ -4,49 +4,147 @@ SOURCE_DIR='./test'
 BACKUP_DIR='./test.backup'
 
 LOG_FILE=$(date -u '+%Y-%m-%dT%H:%M:%SZ.log')
-touch $LOG_FILE 2> /dev/null
 
 
-## ---- FUNCTIONS ---- ##
+## ---- OPTION FLAGS ---- ##
 
-directory_log () {
+PARAMS=""
+OVERRIDE=""
+
+VERBOSE=''
+DRY_RUN=''
+NO_LOG=''
+WIPE=''
+
+
+## ---- PARSER ---- ##
+
+option_parser () {
+
+  while (( "$#" )); do
+  case "$1" in
+    -v|--verbose)
+      VERBOSE='set'
+      tabs 4
+      shift
+      ;;
+    -d|--dry-run)
+      DRY_RUN='set'
+      VERBOSE='set'
+      shift
+      ;;
+    -n|--no-log)
+      NO_LOG='set'
+      shift
+      ;;
+    -o|--override)
+      OVERRIDE="$OVERRIDE $2"
+      shift 2
+      ;;
+    -w|--wipe-backup)
+      WIPE='set'
+      shift 2
+      ;;
+    --) # end argument parsing
+      shift
+      break
+      ;;
+    -*|--*=) # unsupported flags
+      local log=" Error: Unsupported flag $1 "
+      echo "$(tput setaf 1)$log$(tput sgr 0)" >&2
+      exit 1
+      ;;
+    *) # preserve positional arguments
+      PARAMS="$PARAMS $1"
+      shift
+      ;;
+  esac
+done
+
+global_to_array "OVERRIDE"
+# eval set -- "$PARAMS"
+
+}
+
+
+## ---- LOGS ---- ##
+
+
+subdirectory_log () {
   # PARSING
   local backup=$1
   # FUNCTIONALITY
-  local log="\t MAKING DIRECTORY IN BACKUP:  $backup "
-  echo -e "$(tput setaf 3)$log$(tput sgr 0)"
-  echo -e $log >> $LOG_FILE
+  local highlight="\t MAKING SUBDIRECTORY IN BACKUP: "
+  local log=" $backup "
+  test $VERBOSE && echo -e "$(tput setaf 3)$highlight$(tput sgr 0)$log"
+  test ! $NO_LOG && echo -e "$highlight$log" >> $LOG_FILE
 }
 
-warning_log () {
-  # PARSING
-  local source=$1
-  local backup=$2
-  # FUNCTIONALITY
-  local log="\t FAILIURE WARNING: $source -> $backup "
-  echo -e "$(tput setaf 1)$log$(tput sgr 0)"
-  echo -e $log >> $LOG_FILE
-}
 
 backup_log () {
   # PARSING
   local SOURCE_DIR=$1
   local BACKUP_DIR=$2
   # FUNCTIONALITY
-  local log=" BACKING-UP: $SOURCE_DIR -> $BACKUP_DIR "
-  echo -e "$(tput setaf 6)$log$(tput sgr 0)"
-  echo -e $log >> $LOG_FILE
+  local highlight=" BACKING-UP: "
+  local log=" $SOURCE_DIR -> $BACKUP_DIR "
+  test $VERBOSE && echo -e "$(tput setaf 6)$highlight$(tput sgr 0)$log"
+  test ! $NO_LOG && echo -e "$highlight$log" >> $LOG_FILE
 }
+
 
 file_log () {
   # PARSING
   local source=$1
   local backup=$2
   # FUNCTIONALITY
-  local log="\t CREATING FILE BACKUP: $source -> $backup"
-  echo -e "$log"
-  echo -e $log >> $LOG_FILE
+  local highlight="\t CREATING FILE BACKUP: "
+  local log=" $source -> $backup "
+  test $VERBOSE && echo -e "$(tput setaf 2)$highlight$(tput sgr 0)$log"
+  test ! $NO_LOG && echo -e "$highlight$log" >> $LOG_FILE
 }
+
+
+override_log () {
+  # PARSING
+  local backup=$1
+  # FUNCTIONALITY
+  local highlight=" OVERRIDING: "
+  local log=" $backup "
+  test $VERBOSE && echo -e "$(tput setaf 6)$highlight$(tput sgr 0)$log"
+  test ! $NO_LOG && echo -e "$highlight$log" >> $LOG_FILE
+}
+
+
+wipe_log () {
+  # FUNCTIONALITY
+  local log=" WIPING OUT BACKUP "
+  test $VERBOSE && echo -e "$(tput setaf 6)$log$(tput sgr 0)"
+  test ! $NO_LOG && echo -e $log >> $LOG_FILE
+}
+
+
+warning_log () {
+  # PARSING
+  local warning=$1
+  # FUNCTIONALITY
+  local highlight=" WARNING: "
+  local log=" Could not deal with \"$warning\" "
+  echo -e "$(tput setab 1)$(tput setaf 7)$highlight$(tput sgr 0)$log" >&2
+  test ! $NO_LOG && echo -e "$highlight$log" >> $LOG_FILE
+}
+
+
+## ---- FUNCTIONS ---- ##
+
+
+global_to_array () {
+  # PARSING
+  local global_name=$1
+  # FUNCTIONALITY
+  IFS=' ' read -ra $global_name <<< $(eval echo '$'$global_name)
+}
+
 
 get_sorted_tree () {
   # PARSING
@@ -54,6 +152,7 @@ get_sorted_tree () {
   # FUNCTIONALITY
   find ${BASE_DIR} | sort
 }
+
 
 get_relative_path () {
   # PARSING
@@ -63,13 +162,31 @@ get_relative_path () {
   echo ${source} | sed -e "s,^${BASE_DIR},," -e "s,^\/,,"
 }
 
-is_new_directory () {
+
+override () {
+  local target=''
+  for subdirectory in "${OVERRIDE[@]}"
+  do
+    target="${BACKUP_DIR}/$(get_relative_path $subdirectory $SOURCE_DIR)"
+    if [ -d $target ]
+    then
+      override_log $target
+      rm -rf $target
+    else
+      warning_log $subdirectory
+    fi
+  done
+}
+
+
+is_new_subdirectory () {
   # PARSING
   local source=$1
   local backup=$2
   # FUNCTIONALITY
   test -d $source && test ! -d $backup
 }
+
 
 is_new_file () {
   # PARSING
@@ -79,25 +196,25 @@ is_new_file () {
   test ! -d $source && test ! $backup -nt $source
 }
 
+
 backup_if_new () {
   # PARSING
   local source=$1
   local backup=$2
   # FUNCTIONALITY
-  if is_new_directory $source $backup
+  if is_new_subdirectory $source $backup
   then
-    directory_log $backup
-    mkdir $backup
+    subdirectory_log $backup
+    test ! $DRY_RUN && mkdir $backup
   elif is_new_file $source $backup
   then
     file_log $source $backup
-    cp $source $backup
-  else
-    warning_log $source $backup
+    test ! $DRY_RUN && cp $source $backup
   fi
 }
 
-update_backup () {
+
+update_backup_directory () {
   # PARSING
   local SOURCE_DIR=$1
   local BACKUP_DIR=$2
@@ -116,5 +233,7 @@ update_backup () {
 
 ## ---- CODE TO EXECUTE ---- ##
 
-tabs 4
-update_backup $SOURCE_DIR $BACKUP_DIR
+option_parser $@
+test ! $NO_LOG && touch $LOG_FILE 2> /dev/null
+override
+update_backup_directory $SOURCE_DIR $BACKUP_DIR
