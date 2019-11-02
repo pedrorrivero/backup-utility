@@ -1,0 +1,5 @@
+BACKING-UP: ./test -> ./test.backup
+	 MAKING DIRECTORY IN BACKUP: ./test.backup/dir1
+	 CREATING FILE BACKUP: ./test/dir1/file3 -> ./test.backup/dir1/file3
+	 CREATING FILE BACKUP: ./test/file1 -> ./test.backup/file1
+	 CREATING FILE BACKUP: ./test/file2 -> ./test.backup/file2
