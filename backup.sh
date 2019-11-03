@@ -232,18 +232,53 @@ global_to_array () {
 
 get_sorted_tree () {
   # PARSING
-  local BASE_DIR=$1
+  local BASE_DIR=$(fix_dir_path $1)
   # FUNCTIONALITY
   find ${BASE_DIR} | sort
 }
 
 
+fix_dir_path () {
+  # PARSING
+  local dir_path=$1
+  # FUNCTIONALITY
+  local fixed_path=$(echo $dir_path | sed "s,/*$,,")
+  echo $fixed_path
+}
+
+
 get_relative_path () {
   # PARSING
-  local source=$1
-  local BASE_DIR=$2
+  local path=$1
+  local BASE_DIR=$(fix_dir_path $2)
   # FUNCTIONALITY
-  echo ${source} | sed -e "s,^${BASE_DIR},," -e "s,^\/,,"
+  echo ${path} | sed -e "s,^${BASE_DIR},," -e "s,^\/,,"
+}
+
+
+is_in_directory () {
+  # PARSING
+  local target=$1
+  local TARGET_DIR=$(fix_dir_path $2)
+  # FUNCTIONALITY
+  if [[ $target == ${TARGET_DIR}'/'* ]]; then
+    return 0
+  fi
+}
+
+
+get_backup_path () {
+  # PARSING
+  local source=$1
+  local SOURCE_DIR=$(fix_dir_path $2)
+  local BACKUP_DIR=$(fix_dir_path $3)
+  # FUNCTIONALITY
+  if is_in_directory $source $SOURCE_DIR
+  then
+    echo -e "${BACKUP_DIR}/$(get_relative_path $source $SOURCE_DIR)"
+  else
+    return 1
+  fi
 }
 
 
@@ -316,8 +351,8 @@ backup_if_new () {
 # Uses global options (inherited)
 do_backup () {
   # PARSING
-  local SOURCE_DIR=$1
-  local BACKUP_DIR=$2
+  local SOURCE_DIR=$(fix_dir_path $1)
+  local BACKUP_DIR=$(fix_dir_path $2)
 
   # FUNCTIONALITY
   backup_log $SOURCE_DIR $BACKUP_DIR
@@ -347,7 +382,7 @@ override_if_requested () {
   # FUNCTIONALITY
   if [ -z $DRY_RUN ]
   then
-    ask_confirmation "subdirectory override"
+    ask_confirmation "override subdirectory \"$target\""
     rm -rf $target
   fi
 }
@@ -355,19 +390,19 @@ override_if_requested () {
 # Uses global options
 override_requested_subdirecrories () {
   # PARSING
-  local SOURCE_DIR=$1
-  local BACKUP_DIR=$2
+  local SOURCE_DIR=$(fix_dir_path $1)
+  local BACKUP_DIR=$(fix_dir_path $2)
   # FUNCTIONALITY
   local target=''
   for subdirectory in "${OVERRIDE[@]}"
   do
-    target="${BACKUP_DIR}/$(get_relative_path $subdirectory $SOURCE_DIR)"
+    target=$(get_backup_path $subdirectory $SOURCE_DIR $BACKUP_DIR)
     if [ -d $target ]
     then
       override_log $target
       override_if_requested $target
     else
-      warning_log "OVERRIDE FAILED: \"$subdirectory\" is not a subdirectory."
+      warning_log "OVERRIDE FAILED: \"$target\" is not a subdirectory."
     fi
   done
 }
@@ -375,13 +410,13 @@ override_requested_subdirecrories () {
 # Uses global options
 wipe_backup_if_requested () {
   # PARSING
-  local BACKUP_DIR=$1
+  local target=$(fix_dir_path $1)
   # FUNCTIONALITY
   if [ ! -z $WIPE ] && [ -z $DRY_RUN ]
   then
     wipe_log
-    ask_confirmation "backup wipe"
-    rm -rf $BACKUP_DIR/*
+    ask_confirmation "wipe backup \"$target\""
+    rm -rf $target/*
   fi
 }
 
@@ -395,14 +430,15 @@ backup () {
   init_backup_mode
   argument_parser $ARGS
   create_log_file
-  override_requested_subdirecrories $SOURCE_DIR $BACKUP_DIR
-  wipe_backup_if_requested $BACKUP_DIR
 
   for (( i=0; i<${#DIRECTORY_PAIRS[@]}; i+=2 ));
   do
 
-    local SOURCE_DIR=${DIRECTORY_PAIRS[$i]}
-    local BACKUP_DIR=${DIRECTORY_PAIRS[$i+1]}
+    local SOURCE_DIR=$(fix_dir_path ${DIRECTORY_PAIRS[$i]})
+    local BACKUP_DIR=$(fix_dir_path ${DIRECTORY_PAIRS[$i+1]})
+
+    override_requested_subdirecrories $SOURCE_DIR $BACKUP_DIR
+    wipe_backup_if_requested $BACKUP_DIR
 
     do_backup $SOURCE_DIR $BACKUP_DIR
   done
@@ -415,3 +451,4 @@ backup () {
 ## ---- EXECUTION ---- ##
 
 backup $ARGS
+# get_backup_path './test/dir1' './test' './test.backup/'
