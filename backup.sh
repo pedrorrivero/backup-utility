@@ -5,10 +5,95 @@
 # Date: Nov 2 2019
 # ---------------------------------------- #
 
-SOURCE_DIR='./test'
-BACKUP_DIR='./test.backup'
+TEST_SOURCE='./test'
+TEST_BACKUP='./test.backup'
 
+DIRECTORY_PAIRS=( $TEST_SOURCE $TEST_BACKUP)
+
+
+## ---- OPTIONS ---- ##
+
+OPTIONS=$@
 LOG_FILE="./logs/$(date -u '+%Y-%m-%dT%H:%M:%SZ.log')"
+
+
+## ---- LOGS ---- ##
+
+# Uses global options and log
+new_subdirectory_log () {
+  # PARSING
+  local backup=$1
+  # FUNCTIONALITY
+  local highlight="\t MAKING SUBDIRECTORY IN BACKUP: "
+  local log=" $backup "
+  test ! $QUIET && echo -e "$(tput setaf 3)$highlight$(tput sgr 0)$log"
+  test ! $NO_LOG && echo -e "$highlight$log" >> $LOG_FILE
+}
+
+# Uses global options and log
+backup_log () {
+  # PARSING
+  local SOURCE_DIR=$1
+  local BACKUP_DIR=$2
+  # FUNCTIONALITY
+  local highlight=" BACKING-UP: "
+  local log=" $SOURCE_DIR -> $BACKUP_DIR "
+  test ! $QUIET && echo -e "$(tput setaf 6)$highlight$(tput sgr 0)$log"
+  test ! $NO_LOG && echo -e "$highlight$log" >> $LOG_FILE
+}
+
+# Uses global options and log
+file_log () {
+  # PARSING
+  local source=$1
+  local backup=$2
+  # FUNCTIONALITY
+  local highlight="\t CREATING FILE BACKUP: "
+  local log=" $source -> $backup "
+  test ! $QUIET && echo -e "$(tput setaf 2)$highlight$(tput sgr 0)$log"
+  test ! $NO_LOG && echo -e "$highlight$log" >> $LOG_FILE
+}
+
+# Uses global options and log
+override_log () {
+  # PARSING
+  local backup=$1
+  # FUNCTIONALITY
+  local highlight=" OVERRIDING: "
+  local log=" $backup "
+  test ! $QUIET && echo -e "$(tput setaf 6)$highlight$(tput sgr 0)$log"
+  test ! $NO_LOG && echo -e "$highlight$log" >> $LOG_FILE
+}
+
+# Uses global options and log
+wipe_log () {
+  # FUNCTIONALITY
+  local log=" WIPING OUT BACKUP "
+  test ! $QUIET && echo -e "$(tput setaf 6)$log$(tput sgr 0)"
+  test ! $NO_LOG && echo -e $log >> $LOG_FILE
+}
+
+# Uses global options and log
+warning_log () {
+  # PARSING
+  local message=$1
+  # FUNCTIONALITY
+  local highlight=" WARNING: "
+  echo -e "$(tput setab 1)$(tput setaf 7)$highlight"\
+  "$(tput sgr 0)$message" >&2
+  test ! $NO_LOG && echo -e "$highlight$message" >> $LOG_FILE
+}
+
+# Uses global options and log
+error_log () {
+  # PARSING
+  local message=$1
+  # FUNCTIONALITY
+  local highlight=" ERROR: "
+  echo -e "$(tput setab 1)$(tput setaf 7)$highlight"\
+  "$(tput sgr 0)$(tput setaf 1)$message$(tput sgr 0)" >&2
+  test ! $NO_LOG && echo -e "$highlight$message" >> $LOG_FILE
+}
 
 
 ## ---- PARSER ---- ##
@@ -72,8 +157,7 @@ option_parser () {
       break
       ;;
     -*|--*=) # unsupported flags
-      local message=" Error: Unsupported flag $1 "
-      echo "$(tput setaf 1)$message$(tput sgr 0)" >&2
+      error_log "Unsupported flag $1"
       exit 1
       ;;
     *) # preserve positional arguments
@@ -98,74 +182,6 @@ reset_options_and_arguments () {
   NO_LOG=''
   WIPE=''
   FORCE=''
-}
-
-
-## ---- LOGS ---- ##
-
-# Uses global options and log
-new_subdirectory_log () {
-  # PARSING
-  local backup=$1
-  # FUNCTIONALITY
-  local highlight="\t MAKING SUBDIRECTORY IN BACKUP: "
-  local log=" $backup "
-  test ! $QUIET && echo -e "$(tput setaf 3)$highlight$(tput sgr 0)$log"
-  test ! $NO_LOG && echo -e "$highlight$log" >> $LOG_FILE
-}
-
-# Uses global options and log
-backup_log () {
-  # PARSING
-  local SOURCE_DIR=$1
-  local BACKUP_DIR=$2
-  # FUNCTIONALITY
-  local highlight=" BACKING-UP: "
-  local log=" $SOURCE_DIR -> $BACKUP_DIR "
-  test ! $QUIET && echo -e "$(tput setaf 6)$highlight$(tput sgr 0)$log"
-  test ! $NO_LOG && echo -e "$highlight$log" >> $LOG_FILE
-}
-
-# Uses global options and log
-file_log () {
-  # PARSING
-  local source=$1
-  local backup=$2
-  # FUNCTIONALITY
-  local highlight="\t CREATING FILE BACKUP: "
-  local log=" $source -> $backup "
-  test ! $QUIET && echo -e "$(tput setaf 2)$highlight$(tput sgr 0)$log"
-  test ! $NO_LOG && echo -e "$highlight$log" >> $LOG_FILE
-}
-
-# Uses global options and log
-override_log () {
-  # PARSING
-  local backup=$1
-  # FUNCTIONALITY
-  local highlight=" OVERRIDING: "
-  local log=" $backup "
-  test ! $QUIET && echo -e "$(tput setaf 6)$highlight$(tput sgr 0)$log"
-  test ! $NO_LOG && echo -e "$highlight$log" >> $LOG_FILE
-}
-
-# Uses global options and log
-wipe_log () {
-  # FUNCTIONALITY
-  local log=" WIPING OUT BACKUP "
-  test ! $QUIET && echo -e "$(tput setaf 6)$log$(tput sgr 0)"
-  test ! $NO_LOG && echo -e $log >> $LOG_FILE
-}
-
-# Uses global options and log
-warning_log () {
-  # PARSING
-  local warning=$1
-  # FUNCTIONALITY
-  local highlight=" WARNING: "
-  local log=" Could not deal with \"$warning\" "
-  echo -e "$(tput setab 1)$(tput setaf 7)$highlight$(tput sgr 0)$log" >&2
-  test ! $NO_LOG && echo -e "$highlight$log" >> $LOG_FILE
 }
 
 
@@ -218,22 +234,30 @@ confirm_answer () {
   # PARSING
   local confirmation=$1
   # FUNCTIONALITY
-  if [ $confirmation != 'y' ] && [ $confirmation != 'Y' ]
+  if [[ $confirmation == 'n' ]] || [[ $confirmation == 'N' ]]
   then
     echo -e "Backup cancelled... \n"
     exit 0
+  elif [[ $confirmation == 'y' ]] || [[ $confirmation == 'Y' ]]
+  then
+    return 0
   else
-    echo -en "\n"
+    return 1
   fi
 }
 
 # Uses global options
 ask_confirmation () {
+  # PARSING
   local message=$1
+  # FUNCTIONALITY
+  local confirmation=''
   if [ -z $FORCE ]
   then
-    read -p "Confirm $1 [y/n]: " confirmation
-    confirm_answer $confirmation
+    while ! confirm_answer $confirmation
+    do
+      read -p "Confirm $1 [y/n]: " confirmation
+    done
   fi
 }
 
@@ -335,7 +359,7 @@ wipe_backup_if_requested () {
   # PARSING
   local BACKUP_DIR=$1
   # FUNCTIONALITY
-  if [ ! -z $WIPE ]
+  if [ ! -z $WIPE ] && [ -z $DRY_RUN ]
   then
     wipe_log
     ask_confirmation "backup wipe"
@@ -363,5 +387,23 @@ backup () {
 }
 
 
-## ---- CODE TO EXECUTE ---- ##
-backup $@ $SOURCE_DIR $BACKUP_DIR
+## ---- EXECUTION ---- ##
+
+option_parser $OPTIONS > /dev/null
+if [ ${#DIRECTORY_PAIRS[@]} == '0' ] && [ ${#MIRROR_DIRECTORIES[@]} == '0' ]
+then
+  echo -e "\n$(tput setaf 1)Invalid input: missing directory pair$(tput sgr 0)\n" >&2
+  exit 1
+elif [ ${#DIRECTORY_PAIRS[@]} == '0' ]
+then
+  backup $OPTIONS
+else
+  for (( i=0; i<${#DIRECTORY_PAIRS[@]}; i+=2 ));
+  do
+
+    SOURCE_DIR=${DIRECTORY_PAIRS[$i]}
+    BACKUP_DIR=${DIRECTORY_PAIRS[$i+1]}
+
+    backup $OPTIONS $SOURCE_DIR $BACKUP_DIR
+  done
+fi
