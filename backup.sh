@@ -1,25 +1,19 @@
 #!/usr/local/bin/bash
 
+# ---------------------------------------- #
+# Programer: PEDRO RIVERO
+# Date: Nov 2 2019
+# ---------------------------------------- #
+
 SOURCE_DIR='./test'
 BACKUP_DIR='./test.backup'
 
 LOG_FILE="./logs/$(date -u '+%Y-%m-%dT%H:%M:%SZ.log')"
 
 
-## ---- OPTION FLAGS ---- ##
-
-PARAMS=""
-OVERRIDE=""
-
-QUIET=''
-DRY_RUN=''
-NO_LOG=''
-WIPE=''
-FORCE=''
-
-
 ## ---- PARSER ---- ##
 
+# Uses global options
 option_parser () {
 
   while (( "$#" )); do
@@ -83,21 +77,33 @@ option_parser () {
       exit 1
       ;;
     *) # preserve positional arguments
-      PARAMS="$PARAMS $1"
+      MIRROR_DIRECTORIES="$MIRROR_DIRECTORIES $1"
       shift
       ;;
   esac
 done
 
 global_to_array "OVERRIDE"
-# eval set -- "$PARAMS"
+global_to_array "MIRROR_DIRECTORIES"
 
+}
+
+# Uses global options
+reset_options_and_arguments () {
+  MIRROR_DIRECTORIES=""
+  OVERRIDE=""
+
+  QUIET=''
+  DRY_RUN=''
+  NO_LOG=''
+  WIPE=''
+  FORCE=''
 }
 
 
 ## ---- LOGS ---- ##
 
-
+# Uses global options and log
 new_subdirectory_log () {
   # PARSING
   local backup=$1
@@ -108,7 +114,7 @@ new_subdirectory_log () {
   test ! $NO_LOG && echo -e "$highlight$log" >> $LOG_FILE
 }
 
-
+# Uses global options and log
 backup_log () {
   # PARSING
   local SOURCE_DIR=$1
@@ -120,7 +126,7 @@ backup_log () {
   test ! $NO_LOG && echo -e "$highlight$log" >> $LOG_FILE
 }
 
-
+# Uses global options and log
 file_log () {
   # PARSING
   local source=$1
@@ -132,7 +138,7 @@ file_log () {
   test ! $NO_LOG && echo -e "$highlight$log" >> $LOG_FILE
 }
 
-
+# Uses global options and log
 override_log () {
   # PARSING
   local backup=$1
@@ -143,7 +149,7 @@ override_log () {
   test ! $NO_LOG && echo -e "$highlight$log" >> $LOG_FILE
 }
 
-
+# Uses global options and log
 wipe_log () {
   # FUNCTIONALITY
   local log=" WIPING OUT BACKUP "
@@ -151,7 +157,7 @@ wipe_log () {
   test ! $NO_LOG && echo -e $log >> $LOG_FILE
 }
 
-
+# Uses global options and log
 warning_log () {
   # PARSING
   local warning=$1
@@ -165,13 +171,14 @@ warning_log () {
 
 ## ---- FUNCTIONS ---- ##
 
-
+# Uses global options
 init_backup_mode () {
   tabs 4
+  reset_options_and_arguments
   echo -en "\n"
 }
 
-
+# Uses global options and log
 end_backup_mode () {
   if [ -z $NO_LOG ]
   then
@@ -181,7 +188,7 @@ end_backup_mode () {
   fi
 }
 
-
+# Uses generic global
 global_to_array () {
   # PARSING
   local global_name=$1
@@ -220,7 +227,7 @@ confirm_answer () {
   fi
 }
 
-
+# Uses global options
 ask_confirmation () {
   local message=$1
   if [ -z $FORCE ]
@@ -248,7 +255,7 @@ is_new_file () {
   test ! -d $source && test ! $backup -nt $source
 }
 
-
+# Uses global options
 backup_if_new () {
   # PARSING
   local source=$1
@@ -265,7 +272,7 @@ backup_if_new () {
   fi
 }
 
-
+# Uses global options (inherited)
 do_backup () {
   # PARSING
   local SOURCE_DIR=$1
@@ -282,7 +289,7 @@ do_backup () {
   done
 }
 
-
+# Uses global options and log
 create_log_file () {
   if [ -z $NO_LOG ]
   then
@@ -291,7 +298,7 @@ create_log_file () {
   fi
 }
 
-
+# Uses global options
 override_if_requested () {
   # PARSING
   local target=$1
@@ -303,8 +310,12 @@ override_if_requested () {
   fi
 }
 
-
+# Uses global options
 override_requested_subdirecrories () {
+  # PARSING
+  local SOURCE_DIR=$1
+  local BACKUP_DIR=$2
+  # FUNCTIONALITY
   local target=''
   for subdirectory in "${OVERRIDE[@]}"
   do
@@ -319,7 +330,7 @@ override_requested_subdirecrories () {
   done
 }
 
-
+# Uses global options
 wipe_backup_if_requested () {
   # PARSING
   local BACKUP_DIR=$1
@@ -333,12 +344,24 @@ wipe_backup_if_requested () {
 }
 
 
-## ---- CODE TO EXECUTE ---- ##
+## ---- MAIN FUNCTION ---- ##
 
-init_backup_mode
-option_parser $@
-create_log_file
-override_requested_subdirecrories
-wipe_backup_if_requested $BACKUP_DIR
-do_backup $SOURCE_DIR $BACKUP_DIR
-end_backup_mode
+backup () {
+
+  init_backup_mode
+  option_parser $@
+
+  local SOURCE_DIR=${MIRROR_DIRECTORIES[0]}
+  local BACKUP_DIR=${MIRROR_DIRECTORIES[1]}
+
+  create_log_file
+  override_requested_subdirecrories $SOURCE_DIR $BACKUP_DIR
+  wipe_backup_if_requested $BACKUP_DIR
+  do_backup $SOURCE_DIR $BACKUP_DIR
+  end_backup_mode
+
+}
+
+
+## ---- CODE TO EXECUTE ---- ##
+backup $@ $SOURCE_DIR $BACKUP_DIR
