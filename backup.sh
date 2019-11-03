@@ -8,12 +8,12 @@
 TEST_SOURCE='./test'
 TEST_BACKUP='./test.backup'
 
-DIRECTORY_PAIRS=( $TEST_SOURCE $TEST_BACKUP)
+DIRECTORY_PAIRS=" $TEST_SOURCE $TEST_BACKUP "
 
 
-## ---- OPTIONS ---- ##
+## ---- PARAMETERS ---- ##
 
-OPTIONS=$@
+ARGS=$@
 LOG_FILE="./logs/$(date -u '+%Y-%m-%dT%H:%M:%SZ.log')"
 
 
@@ -100,7 +100,7 @@ error_log () {
 ## ---- PARSER ---- ##
 
 # Uses global options
-option_parser () {
+argument_parser () {
 
   while (( "$#" )); do
   case "$1" in
@@ -159,23 +159,39 @@ option_parser () {
       ;;
     -*|--*=) # unsupported flags
       error_log "Unsupported flag $1"
+      echo -en "\n"
       exit 1
       ;;
     *) # preserve positional arguments
-      MIRROR_DIRECTORIES="$MIRROR_DIRECTORIES $1"
+      DIRECTORY_PAIRS="$DIRECTORY_PAIRS $1"
       shift
       ;;
   esac
 done
 
 global_to_array "OVERRIDE"
-global_to_array "MIRROR_DIRECTORIES"
+global_to_array "DIRECTORY_PAIRS"
+
+verify_arguments
 
 }
 
 # Uses global options
-reset_options_and_arguments () {
-  MIRROR_DIRECTORIES=""
+verify_arguments (){
+  local number_of_directories=${#DIRECTORY_PAIRS[@]}
+  if (( $number_of_directories % 2 == 0 ))
+  then
+    return 0
+  else
+    error_log "Not a backup location for each source directory."
+    echo -en "\n"
+    exit 1
+  fi
+}
+
+# Uses global options
+reset_options () {
+  # DIRECTORY_PAIRS=""
   OVERRIDE=""
 
   QUIET=''
@@ -191,7 +207,7 @@ reset_options_and_arguments () {
 # Uses global options
 init_backup_mode () {
   tabs 4
-  reset_options_and_arguments
+  reset_options
   echo -en "\n"
 }
 
@@ -306,10 +322,11 @@ do_backup () {
   # FUNCTIONALITY
   backup_log $SOURCE_DIR $BACKUP_DIR
   local source_tree=($(get_sorted_tree ${SOURCE_DIR}))
+  local backup=""
 
   for source in "${source_tree[@]:1}"
   do
-    local backup="${BACKUP_DIR}/$(get_relative_path $source $SOURCE_DIR)"
+    backup="${BACKUP_DIR}/$(get_relative_path $source $SOURCE_DIR)"
     backup_if_new $source $backup
   done
 }
@@ -373,16 +390,23 @@ wipe_backup_if_requested () {
 
 backup () {
 
+  local ARGS=$@
+
   init_backup_mode
-  option_parser $@
-
-  local SOURCE_DIR=${MIRROR_DIRECTORIES[0]}
-  local BACKUP_DIR=${MIRROR_DIRECTORIES[1]}
-
+  argument_parser $ARGS
   create_log_file
   override_requested_subdirecrories $SOURCE_DIR $BACKUP_DIR
   wipe_backup_if_requested $BACKUP_DIR
-  do_backup $SOURCE_DIR $BACKUP_DIR
+
+  for (( i=0; i<${#DIRECTORY_PAIRS[@]}; i+=2 ));
+  do
+
+    local SOURCE_DIR=${DIRECTORY_PAIRS[$i]}
+    local BACKUP_DIR=${DIRECTORY_PAIRS[$i+1]}
+
+    do_backup $SOURCE_DIR $BACKUP_DIR
+  done
+
   end_backup_mode
 
 }
@@ -390,21 +414,4 @@ backup () {
 
 ## ---- EXECUTION ---- ##
 
-option_parser $OPTIONS > /dev/null
-if [ ${#DIRECTORY_PAIRS[@]} == '0' ] && [ ${#MIRROR_DIRECTORIES[@]} == '0' ]
-then
-  echo -e "\n$(tput setaf 1)Invalid input: missing directory pair$(tput sgr 0)\n" >&2
-  exit 1
-elif [ ${#DIRECTORY_PAIRS[@]} == '0' ]
-then
-  backup $OPTIONS
-else
-  for (( i=0; i<${#DIRECTORY_PAIRS[@]}; i+=2 ));
-  do
-
-    SOURCE_DIR=${DIRECTORY_PAIRS[$i]}
-    BACKUP_DIR=${DIRECTORY_PAIRS[$i+1]}
-
-    backup $OPTIONS $SOURCE_DIR $BACKUP_DIR
-  done
-fi
+backup $ARGS
