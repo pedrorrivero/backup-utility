@@ -18,6 +18,7 @@ LOG_FILE="./logs/$(date -u '+%Y-%m-%dT%H:%M:%SZ.log')"
 
 
 ## ---- LOGS ---- ##
+## These should be done with a parent class (unsupported)
 
 # Uses global options and log
 new_subdirectory_log () {
@@ -78,9 +79,9 @@ warning_log () {
   # PARSING
   local message=$1
   # FUNCTIONALITY
-  local highlight=" WARNING: "
-  echo -e "$(tput setab 1)$(tput setaf 7)$highlight"\
-  "$(tput sgr 0)$message" >&2
+  local highlight=" WARNING "
+  echo -e "$(tput setab 1)$(tput setaf 7)$highlight$(tput sgr 0)"\
+  "$message" >&2
   test ! $NO_LOG && echo -e "$highlight$message" >> $LOG_FILE
 }
 
@@ -89,9 +90,9 @@ error_log () {
   # PARSING
   local message=$1
   # FUNCTIONALITY
-  local highlight=" ERROR: "
-  echo -e "$(tput setab 1)$(tput setaf 7)$highlight"\
-  "$(tput sgr 0)$(tput setaf 1)$message$(tput sgr 0)" >&2
+  local highlight=" ERROR "
+  echo -e "$(tput setab 1)$(tput setaf 7)$highlight$(tput sgr 0)"\
+  "$(tput setaf 1)$message$(tput sgr 0)" >&2
   test ! $NO_LOG && echo -e "$highlight$message" >> $LOG_FILE
 }
 
@@ -349,7 +350,7 @@ override_requested_subdirecrories () {
       override_log $target
       override_if_requested $target
     else
-      warning_log $subdirectory
+      warning_log "OVERRIDE FAILED: \"$subdirectory\" is not a subdirectory."
     fi
   done
 }
