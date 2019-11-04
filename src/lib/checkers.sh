@@ -7,7 +7,6 @@
 
 ## ---- FUNCTIONS ---- ##
 
-# Uses global options
 is_even (){
   local number_of_directories=$1
   if (( $number_of_directories % 2 != 0 ))
@@ -18,7 +17,7 @@ is_even (){
   fi
 }
 
-# Uses global options
+
 is_directory (){
   local directory=$1
   if [ ! -d $directory ]; then
@@ -28,8 +27,22 @@ is_directory (){
   fi
 }
 
-# Uses global options
-override_in_source_dir () {
+
+is_in_directory () {
+  # PARSING
+  local target=$1
+  local TARGET_DIR=$2
+  # FUNCTIONALITY
+  if [ -e $target ] && [[ $target == ${TARGET_DIR}'/'* ]]
+  then
+    return 0  #TRUE
+  else
+    return 1  #FALSE
+  fi
+}
+
+# Uses global options and checker
+is_in_source_directory () {
   # PARSING
   local overrider=$1
   # FUNCTIONALITY
@@ -44,7 +57,7 @@ override_in_source_dir () {
   done
 }
 
-
+# Uses log and etc
 is_new_file () {
   # PARSING
   local source=$1
@@ -60,7 +73,7 @@ is_new_file () {
   fi
 }
 
-
+# Uses log and etc
 is_new_subdirectory () {
   # PARSING
   local source=$1
@@ -71,20 +84,6 @@ is_new_subdirectory () {
   elif [ -d $source ] && [ ! -d $backup ]; then
     error_log "CONFLICT: directory \"$source\" -> non-directory \"$backup\"."
     custom_exit 1
-  else
-    return 1  #FALSE
-  fi
-}
-
-
-is_in_directory () {
-  # PARSING
-  local target=$1
-  local TARGET_DIR=$2
-  # FUNCTIONALITY
-  if [ -e $target ] && [[ $target == ${TARGET_DIR}'/'* ]]
-  then
-    return 0  #TRUE
   else
     return 1  #FALSE
   fi
