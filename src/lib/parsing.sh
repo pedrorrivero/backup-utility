@@ -19,7 +19,7 @@ argument_parser () {
     -d|--dry-run)
       DRY_RUN='set'
       NO_LOG='set'
-      echo -e "$(tput setab 7)$(tput setaf 0) DRY-RUN \n$(tput sgr 0)"
+      echo -e "$(tput setab 7)$(tput setaf 0) DRY-RUN $(tput sgr 0)\n"
       shift
       ;;
     -n|--no-log)
@@ -56,10 +56,8 @@ argument_parser () {
       "Do not prompt confirmation dialog."
       echo -e "\t -h  --help: \t "\
       "Display this help. "
-      echo -en "\n"
 
-      shift
-      exit 0
+      custom_exit 0
       ;;
     --) # end argument parsing
       shift
@@ -67,11 +65,9 @@ argument_parser () {
       ;;
     -*|--*=) # unsupported flags
       error_log "Unsupported flag $1"
-      echo -en "\n"
-      exit 1
+      custom_exit 1
       ;;
     *) # preserve positional arguments
-      local directory_arg=$1
       DIRECTORY_PAIRS="$DIRECTORY_PAIRS $1"
       shift
       ;;
@@ -100,19 +96,14 @@ standardize_global () {
 # Uses global options
 verify_arguments (){
   local number_of_directories=${#DIRECTORY_PAIRS[@]}
-  if (( $number_of_directories % 2 == 0 ))
-  then
-    return 0
-  else
-    error_log "Not a backup location for each source directory."
-    echo -en "\n"
-    exit 1
-  fi
+  verify_argument_number $number_of_directories
+  for (( i = 0; i < $number_of_directories; i++ )); do
+    verify_argument_kind ${DIRECTORY_PAIRS[$i]}
+  done
 }
 
 # Uses global options
 reset_options () {
-  # DIRECTORY_PAIRS=""
   OVERRIDE=""
 
   QUIET=''
@@ -128,6 +119,29 @@ global_to_array () {
   local global_name=$1
   # FUNCTIONALITY
   IFS=' ' read -ra $global_name <<< $(eval echo '$'$global_name)
+}
+
+# Uses global options
+verify_argument_number (){
+  local number_of_directories=$1
+  if (( $number_of_directories % 2 != 0 ))
+  then
+    error_log "Not a backup location for each source directory."
+    custom_exit 1
+  else
+    return 0
+  fi
+}
+
+# Uses global options
+verify_argument_kind (){
+  local directory=$1
+  if [ ! -d $directory ]; then
+    error_log "\"$directory\" is not a directory."
+    custom_exit 1
+  else
+    return 0
+  fi
 }
 
 # Uses global options
@@ -156,8 +170,8 @@ confirm_answer () {
     exit 0
   elif [[ $confirmation == 'y' ]] || [[ $confirmation == 'Y' ]]
   then
-    return 0
+    return 0  #TRUE
   else
-    return 1
+    return 1  #FALSE
   fi
 }
