@@ -44,8 +44,8 @@ backup_if_new () {
 # Uses global options (inherited)
 do_backup () {
   # PARSING
-  local SOURCE_DIR=$(fix_dir_path $1)
-  local BACKUP_DIR=$(fix_dir_path $2)
+  local SOURCE_DIR=$1
+  local BACKUP_DIR=$2
 
   # FUNCTIONALITY
   backup_log $SOURCE_DIR $BACKUP_DIR
@@ -83,8 +83,8 @@ override_if_requested () {
 # Uses global options
 override_requested_subdirecrories () {
   # PARSING
-  local SOURCE_DIR=$(fix_dir_path $1)
-  local BACKUP_DIR=$(fix_dir_path $2)
+  local SOURCE_DIR=$1
+  local BACKUP_DIR=$2
   # FUNCTIONALITY
   local target=''
   for subdirectory in "${OVERRIDE[@]}"
@@ -103,7 +103,7 @@ override_requested_subdirecrories () {
 # Uses global options
 wipe_backup_if_requested () {
   # PARSING
-  local target=$(fix_dir_path $1)
+  local target=$1
   # FUNCTIONALITY
   if [ ! -z $WIPE ] && [ -z $DRY_RUN ]
   then

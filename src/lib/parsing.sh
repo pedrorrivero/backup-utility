@@ -71,17 +71,30 @@ argument_parser () {
       exit 1
       ;;
     *) # preserve positional arguments
+      local directory_arg=$1
       DIRECTORY_PAIRS="$DIRECTORY_PAIRS $1"
       shift
       ;;
   esac
 done
 
-global_to_array "OVERRIDE"
-global_to_array "DIRECTORY_PAIRS"
+standardize_global "OVERRIDE"
+standardize_global "DIRECTORY_PAIRS"
 
 verify_arguments
 
+}
+
+# Uses global options
+standardize_global () {
+  # PARSING
+  local global_name=$1
+  # FUNCTIONALITY
+  global_to_array $global_name
+  local global_size=$(eval echo '${#'$global_name'[@]}')
+  for (( i=0; i<$global_size; i++ )); do
+    eval $global_name'['$i']=$(realpath ${'$global_name'['$i']})'
+  done
 }
 
 # Uses global options

@@ -5,7 +5,7 @@
 # Date: Nov 3 2019
 # ---------------------------------------- #
 
-TEST_SOURCE='../test'
+TEST_SOURCE='../test/'
 TEST_BACKUP='../test.backup'
 
 DIRECTORY_PAIRS=" $TEST_SOURCE $TEST_BACKUP "
@@ -32,8 +32,8 @@ backup () {
   for (( i=0; i<${#DIRECTORY_PAIRS[@]}; i+=2 ));
   do
 
-    local SOURCE_DIR=$(fix_dir_path ${DIRECTORY_PAIRS[$i]})
-    local BACKUP_DIR=$(fix_dir_path ${DIRECTORY_PAIRS[$i+1]})
+    local SOURCE_DIR=${DIRECTORY_PAIRS[$i]}
+    local BACKUP_DIR=${DIRECTORY_PAIRS[$i+1]}
 
     override_requested_subdirecrories $SOURCE_DIR $BACKUP_DIR
     wipe_backup_if_requested $BACKUP_DIR
@@ -49,4 +49,3 @@ backup () {
 ## ---- EXECUTION ---- ##
 
 backup $@
-# get_backup_path './test/dir1' './test' './test.backup/'
