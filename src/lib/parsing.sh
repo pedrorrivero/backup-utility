@@ -122,7 +122,7 @@ verify_directories () {
   local number_of_directories=${#DIRECTORY_PAIRS[@]}
   verify_number_of_directories $number_of_directories
   for (( i = 0; i < $number_of_directories; i++ )); do
-    verify_directory_kind ${DIRECTORY_PAIRS[$i]}
+    verify_directory_type ${DIRECTORY_PAIRS[$i]}
   done
 }
 
@@ -149,7 +149,7 @@ verify_number_of_directories (){
 }
 
 # Uses global options
-verify_directory_kind (){
+verify_directory_type (){
   local directory=$1
   if [ ! -d $directory ]; then
     error_log "\"$directory\" is not a directory."

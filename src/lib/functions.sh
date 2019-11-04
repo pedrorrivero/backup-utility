@@ -97,7 +97,7 @@ override_requested_subdirecrories () {
   do
     target=$(get_backup_path $subdirectory $SOURCE_DIR $BACKUP_DIR)
     if [ -z $target ]; then
-      return 1
+      :
     elif [ -e $target ]; then
       override_log $target
       override_if_wet $target
@@ -112,7 +112,7 @@ wipe_backup_if_requested () {
   # PARSING
   local target=$1
   # FUNCTIONALITY
-  if [ ! -z $WIPE ] && [ -z $DRY_RUN ]
+  if [ ! -z $WIPE ] && [ -z $DRY_RUN ] && [ ! -z $target ]
   then
     wipe_log
     ask_confirmation "wipe backup \"$target\""
