@@ -7,7 +7,7 @@
 
 ## ---- FUNCTIONS ---- ##
 
-# Uses global options
+# Uses global options and prompter
 ask_confirmation () {
   # PARSING
   local message=$1
@@ -22,15 +22,15 @@ ask_confirmation () {
   fi
 }
 
-
+# Uses etc
 confirm_answer () {
   # PARSING
   local confirmation=$1
   # FUNCTIONALITY
   if [[ $confirmation == 'n' ]] || [[ $confirmation == 'N' ]]
   then
-    echo -e "Backup cancelled... \n"
-    exit 0
+    echo "Backup cancelled..."
+    custom_exit 0
   elif [[ $confirmation == 'y' ]] || [[ $confirmation == 'Y' ]]
   then
     return 0  #TRUE
