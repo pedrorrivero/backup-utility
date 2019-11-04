@@ -8,6 +8,7 @@
 TEST_SOURCE='../test/'
 TEST_BACKUP='../test.backup'
 
+# This can be set for automated backups
 DIRECTORY_PAIRS=" $TEST_SOURCE $TEST_BACKUP "
 
 
@@ -27,7 +28,6 @@ backup () {
 
   init_backup_mode
   argument_parser $ARGS
-  create_log_file
 
   for (( i=0; i<${#DIRECTORY_PAIRS[@]}; i+=2 ));
   do

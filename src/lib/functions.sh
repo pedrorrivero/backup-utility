@@ -11,6 +11,7 @@
 init_backup_mode () {
   tabs 4
   reset_options
+  create_log_file
   echo -en "\n"
 }
 
@@ -22,6 +23,11 @@ end_backup_mode () {
   else
     echo -en "\n"
   fi
+}
+
+custom_exit () {
+  echo -en "\n"
+  exit $@
 }
 
 # Uses global options and log
