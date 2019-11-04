@@ -13,12 +13,21 @@ get_sorted_tree () {
 }
 
 
-get_relative_path () {
+is_new_file () {
   # PARSING
-  local path=$1
-  local BASE_DIR=$2
+  local source=$1
+  local backup=$2
   # FUNCTIONALITY
-  echo ${path} | sed -e "s,^${BASE_DIR},," -e "s,^\/,,"
+  test ! -d $source && test ! $backup -nt $source
+}
+
+
+is_new_subdirectory () {
+  # PARSING
+  local source=$1
+  local backup=$2
+  # FUNCTIONALITY
+  test -d $source && test ! -d $backup
 }
 
 
@@ -30,6 +39,15 @@ is_in_directory () {
   if [[ $target == ${TARGET_DIR}'/'* ]]; then
     return 0
   fi
+}
+
+
+get_relative_path () {
+  # PARSING
+  local path=$1
+  local BASE_DIR=$2
+  # FUNCTIONALITY
+  echo ${path} | sed -e "s,^${BASE_DIR},," -e "s,^\/,,"
 }
 
 
@@ -48,25 +66,7 @@ get_backup_path () {
 }
 
 
-is_new_subdirectory () {
-  # PARSING
-  local source=$1
-  local backup=$2
-  # FUNCTIONALITY
-  test -d $source && test ! -d $backup
-}
-
-
-is_new_file () {
-  # PARSING
-  local source=$1
-  local backup=$2
-  # FUNCTIONALITY
-  test ! -d $source && test ! $backup -nt $source
-}
-
-
-realpath() {
+get_realpath() {
   local path=$(echo $1 | sed "s,/*$,,")
   [[ $path = /* ]] && echo "$path" || echo "$PWD/${path#./}"
 }

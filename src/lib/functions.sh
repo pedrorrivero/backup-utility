@@ -24,6 +24,15 @@ end_backup_mode () {
   fi
 }
 
+# Uses global options and log
+create_log_file () {
+  if [ -z $NO_LOG ]
+  then
+    mkdir "$LOG_DIRECTORY" 2> /dev/null
+    touch $LOG_FILE 2> /dev/null
+  fi
+}
+
 # Uses global options
 backup_if_new () {
   # PARSING
@@ -57,15 +66,6 @@ do_backup () {
     backup="${BACKUP_DIR}/$(get_relative_path $source $SOURCE_DIR)"
     backup_if_new $source $backup
   done
-}
-
-# Uses global options and log
-create_log_file () {
-  if [ -z $NO_LOG ]
-  then
-    mkdir ./logs 2> /dev/null
-    touch $LOG_FILE 2> /dev/null
-  fi
 }
 
 # Uses global options

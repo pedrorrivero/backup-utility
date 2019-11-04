@@ -93,7 +93,7 @@ standardize_global () {
   global_to_array $global_name
   local global_size=$(eval echo '${#'$global_name'[@]}')
   for (( i=0; i<$global_size; i++ )); do
-    eval $global_name'['$i']=$(realpath ${'$global_name'['$i']})'
+    eval $global_name'['$i']=$(get_realpath ${'$global_name'['$i']})'
   done
 }
 

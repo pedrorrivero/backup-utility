@@ -13,10 +13,10 @@ DIRECTORY_PAIRS=" $TEST_SOURCE $TEST_BACKUP "
 
 ## ---- LIBRARIES ---- ##
 
+source './lib/filesystem.sh'
 source './lib/logs.sh'
 source './lib/parsing.sh'
 source './lib/functions.sh'
-source './lib/filesystem.sh'
 
 
 ## ---- MAIN  ---- ##

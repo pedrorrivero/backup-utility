@@ -5,7 +5,12 @@
 # Date: Nov 3 2019
 # ---------------------------------------- #
 
-LOG_FILE="./logs/$(date -u '+%Y-%m-%dT%H:%M:%SZ.log')"
+LOG_PATH='.'
+LOG_DIRECTORY_NAME='backup.logs'
+LOG_FILENAME="$(date -u '+%Y-%m-%dT%H:%M:%SZ.log')"
+
+LOG_DIRECTORY=$(get_realpath "$LOG_PATH/$LOG_DIRECTORY_NAME")
+LOG_FILE="$LOG_DIRECTORY/$LOG_FILENAME"
 
 ## ---- LOGS ---- ##
 ## These should be done with a parent class (unsupported)
