@@ -8,23 +8,23 @@
 ## ---- FUNCTIONS ---- ##
 
 # Uses global options
-verify_number_of_directories (){
+is_even (){
   local number_of_directories=$1
   if (( $number_of_directories % 2 != 0 ))
   then
-    error_log "Not a backup location for each source directory."
+    return 1  #FALSE
   else
-    return 0
+    return 0  #TRUE
   fi
 }
 
 # Uses global options
-verify_directory_type (){
+is_directory (){
   local directory=$1
   if [ ! -d $directory ]; then
-    error_log "\"$directory\" is not a directory."
+    return 1  #FALSE
   else
-    return 0
+    return 0  #TRUE
   fi
 }
 
@@ -52,6 +52,7 @@ is_new_file () {
   # FUNCTIONALITY
   if [ ! -d $source ] && [ -d $backup ]; then
     error_log "CONFLICT: non-directory \"$source\" -> directory \"$backup\"."
+    custom_exit 1
   elif [ ! -d $source ] && [ ! $backup -nt $source ]; then
     return 0  #TRUE
   else
@@ -69,6 +70,7 @@ is_new_subdirectory () {
     return 0  #TRUE
   elif [ -d $source ] && [ ! -d $backup ]; then
     error_log "CONFLICT: directory \"$source\" -> non-directory \"$backup\"."
+    custom_exit 1
   else
     return 1  #FALSE
   fi

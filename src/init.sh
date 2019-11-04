@@ -88,6 +88,7 @@ argument_parser () {
       ;;
     -*|--*=) # unsupported flags
       error_log "Unsupported flag $1"
+      custom_exit 1
       ;;
     *) # preserve positional arguments
       DIRECTORY_PAIRS="$DIRECTORY_PAIRS $1"
@@ -133,9 +134,15 @@ verify_arguments (){
 # Uses global options
 verify_directories () {
   local number_of_directories=${#DIRECTORY_PAIRS[@]}
-  verify_number_of_directories $number_of_directories
+  if ! is_even $number_of_directories; then
+    error_log "Not a backup location for each source directory."
+    custom_exit 1
+  fi
   for (( i = 0; i < $number_of_directories; i++ )); do
-    verify_directory_type ${DIRECTORY_PAIRS[$i]}
+    if ! is_directory ${DIRECTORY_PAIRS[$i]}; then
+      error_log "\"$directory\" is not a directory."
+      custom_exit 1
+    fi
   done
 }
 

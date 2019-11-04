@@ -130,5 +130,4 @@ error_log () {
   if [ ! -z $LOG ]; then
     echo -e "$highlight$message" >> $LOG_FILE
   fi
-  custom_exit 1
 }
