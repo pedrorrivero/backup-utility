@@ -18,7 +18,13 @@ is_new_file () {
   local source=$1
   local backup=$2
   # FUNCTIONALITY
-  test ! -d $source && test ! $backup -nt $source
+  if [ ! -d $source ] && [ -d $backup ]; then
+    error_log "CONFLICT: non-directory \"$source\" -> directory \"$backup\"."
+  elif [ ! -d $source ] && [ ! $backup -nt $source ]; then
+    return 0  #TRUE
+  else
+    return 1  #FALSE
+  fi
 }
 
 
@@ -27,7 +33,13 @@ is_new_subdirectory () {
   local source=$1
   local backup=$2
   # FUNCTIONALITY
-  test -d $source && test ! -d $backup
+  if [ -d $source ] && [ ! -e $backup ]; then
+    return 0  #TRUE
+  elif [ -d $source ] && [ ! -d $backup ]; then
+    error_log "CONFLICT: directory \"$source\" -> non-directory \"$backup\"."
+  else
+    return 1  #FALSE
+  fi
 }
 
 
@@ -36,7 +48,8 @@ is_in_directory () {
   local target=$1
   local TARGET_DIR=$2
   # FUNCTIONALITY
-  if [[ $target == ${TARGET_DIR}'/'* ]]; then
+  if [ -e $target ] && [[ $target == ${TARGET_DIR}'/'* ]]
+  then
     return 0  #TRUE
   else
     return 1  #FALSE

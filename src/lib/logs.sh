@@ -122,4 +122,5 @@ error_log () {
   if [[ -z $NO_LOG ]]; then
     echo -e "$highlight$message" >> $LOG_FILE
   fi
+  custom_exit 1
 }

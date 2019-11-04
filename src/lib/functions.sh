@@ -34,7 +34,7 @@ custom_exit () {
 create_log_file () {
   if [ -z $NO_LOG ]
   then
-    mkdir "$LOG_DIRECTORY" 2> /dev/null
+    mkdir $LOG_DIRECTORY 2> /dev/null
     touch $LOG_FILE 2> /dev/null
   fi
 }
@@ -45,14 +45,14 @@ backup_if_new () {
   local source=$1
   local backup=$2
   # FUNCTIONALITY
-  if is_new_subdirectory $source $backup
+  if is_new_subdirectory $source $backup && [ -z $DRY_RUN ]
   then
     new_subdirectory_log $backup
-    test ! $DRY_RUN && mkdir $backup
-  elif is_new_file $source $backup
+    mkdir $backup
+  elif is_new_file $source $backup && [ -z $DRY_RUN ]
   then
     file_log $source $backup
-    test ! $DRY_RUN && cp $source $backup
+    cp $source $backup
   fi
 }
 
@@ -96,12 +96,13 @@ override_requested_subdirecrories () {
   for subdirectory in "${OVERRIDE[@]}"
   do
     target=$(get_backup_path $subdirectory $SOURCE_DIR $BACKUP_DIR)
-    if [ -d $target ]
-    then
+    if [ -z $target ]; then
+      return 1
+    elif [ -e $target ]; then
       override_log $target
       override_if_wet $target
     else
-      warning_log "OVERRIDE FAILED: \"$target\" is not a subdirectory."
+      warning_log "NOTHING TO OVERRIDE: \"$target\" does not exist."
     fi
   done
 }

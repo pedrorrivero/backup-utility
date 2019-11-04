@@ -48,8 +48,8 @@ argument_parser () {
       "Show changes to be made without actually running them."
       echo -e "\t -n  --no-log: \t "\
       "Do not create log file."
-      echo -e "\t -o  --override <subdirectory>: \t "\
-      "Discard previous backup files for a given subdirectory."
+      echo -e "\t -o  --override <file/subdirectory>: \t "\
+      "Discard previous backup file/subdirectory for a given source."
       echo -e "\t -w  --wipe-backup: \t "\
       "Wipe clean all previous backups before running."
       echo -e "\t -f  --force: \t "\
@@ -65,7 +65,6 @@ argument_parser () {
       ;;
     -*|--*=) # unsupported flags
       error_log "Unsupported flag $1"
-      custom_exit 1
       ;;
     *) # preserve positional arguments
       DIRECTORY_PAIRS="$DIRECTORY_PAIRS $1"
@@ -123,7 +122,7 @@ verify_directories () {
   local number_of_directories=${#DIRECTORY_PAIRS[@]}
   verify_number_of_directories $number_of_directories
   for (( i = 0; i < $number_of_directories; i++ )); do
-    verify_argument_kind ${DIRECTORY_PAIRS[$i]}
+    verify_directory_kind ${DIRECTORY_PAIRS[$i]}
   done
 }
 
@@ -131,10 +130,9 @@ verify_directories () {
 verify_overrides () {
   local number_of_overrides=${#OVERRIDE[@]}
   for (( i = 0; i < $number_of_overrides; i++ )); do
-    verify_argument_kind ${OVERRIDE[$i]}
     if ! override_in_source_dir ${OVERRIDE[$i]}
     then
-      warning_log "OVERRIDE FAILED: \"${OVERRIDE[$i]}\" is not in source."
+      warning_log "OVERRIDE FAILED: \"${OVERRIDE[$i]}\" is not in any source."
     fi
   done
 }
@@ -145,18 +143,16 @@ verify_number_of_directories (){
   if (( $number_of_directories % 2 != 0 ))
   then
     error_log "Not a backup location for each source directory."
-    custom_exit 1
   else
     return 0
   fi
 }
 
 # Uses global options
-verify_argument_kind (){
+verify_directory_kind (){
   local directory=$1
   if [ ! -d $directory ]; then
     error_log "\"$directory\" is not a directory."
-    custom_exit 1
   else
     return 0
   fi
