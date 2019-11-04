@@ -8,10 +8,10 @@
 ## ---- LOG FILES ---- ##
 
 if [ -e '/usr/local/bin/prr-backup-src' ]; then
-  # AFTER CONFIGURATION THIS WILL BE USED
+  # AFTER INSTALLATION THIS WILL BE USED
   LOG_PATH='/usr/local/bin/prr-backup-src/..'
 else
-  # BEFORE CONFIGURATION THIS WILL BE USED
+  # BEFORE INSTALLATION THIS WILL BE USED
   LOG_PATH='.'
 fi
 
@@ -35,7 +35,7 @@ new_subdirectory_log () {
   if [ -z $QUIET ]; then
     echo -e "$(tput setaf 3)$highlight$(tput sgr 0)$log"
   fi
-  if [ -z $NO_LOG ]; then
+  if [ ! -z $LOG ]; then
     echo -e "$highlight$log" >> $LOG_FILE
   fi
 }
@@ -53,7 +53,7 @@ backup_log () {
   if [ -z $QUIET ]; then
     echo -e "$(tput setaf 6)$highlight$(tput sgr 0)$log"
   fi
-  if [ -z $NO_LOG ]; then
+  if [ ! -z $LOG ]; then
     echo -e "$highlight$log" >> $LOG_FILE
   fi
 }
@@ -71,7 +71,7 @@ file_log () {
   if [ -z $QUIET ]; then
     echo -e "$(tput setaf 2)$highlight$(tput sgr 0)$log"
   fi
-  if [ -z $NO_LOG ]; then
+  if [ ! -z $LOG ]; then
     echo -e "$highlight$log" >> $LOG_FILE
   fi
 }
@@ -88,7 +88,7 @@ override_log () {
   if [ -z $QUIET ]; then
     echo -e "$(tput setaf 6)$highlight$(tput sgr 0)$log"
   fi
-  if [ -z $NO_LOG ]; then
+  if [ ! -z $LOG ]; then
     echo -e "$highlight$log" >> $LOG_FILE
   fi
 }
@@ -101,7 +101,7 @@ wipe_log () {
   if [ -z $QUIET ]; then
     echo -e "$(tput setaf 6)$log$(tput sgr 0)"
   fi
-  if [ -z $NO_LOG ]; then
+  if [ ! -z $LOG ]; then
     echo -e $log >> $LOG_FILE
   fi
 }
@@ -114,7 +114,7 @@ warning_log () {
   local highlight=" WARNING "
   echo -e "$(tput setab 1)$(tput setaf 7)$highlight$(tput sgr 0)"\
   "$message" >&2
-  if [[ -z $NO_LOG ]]; then
+  if [ ! -z $LOG ]; then
     echo -e "$highlight$message" >> $LOG_FILE
   fi
 }
@@ -127,7 +127,7 @@ error_log () {
   local highlight=" ERROR "
   echo -e "$(tput setab 1)$(tput setaf 7)$highlight$(tput sgr 0)"\
   "$(tput setaf 1)$message$(tput sgr 0)" >&2
-  if [[ -z $NO_LOG ]]; then
+  if [ ! -z $LOG ]; then
     echo -e "$highlight$message" >> $LOG_FILE
   fi
   custom_exit 1

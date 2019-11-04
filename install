@@ -1,0 +1,73 @@
+#!/usr/local/bin/bash
+
+# ---------------------------------------- #
+# Programer: PEDRO RIVERO
+# Date: Nov 4 2019
+# ---------------------------------------- #
+
+
+## ---- INSTALL ---- ##
+
+if [ ! -e "uninstall" ]; then
+  echo "ERROR: Missing file './uninstall'." >&2
+  echo "Please run this installation from within its parent directory: './install'." >&2
+  exit 1
+else
+  chmod 766 'uninstall'
+  source 'uninstall' &>/dev/null
+fi
+
+if [ ! -e "${BIN_NAME}.sh" ]; then
+  echo "ERROR: Missing file '${BIN_NAME}.sh'." >&2
+  echo "Please run this installation from within its parent directory: './install'." >&2
+
+elif [ ! -e "${SRC_NAME}/backup.sh" ]; then
+  echo "ERROR: Missing file '${SRC_NAME}/backup.sh'." >&2
+  echo "Please run this installation from within its parent directory: './install'." >&2
+
+elif [ ! -e "${SRC_NAME}/end.sh" ]; then
+  echo "ERROR: Missing file '${SRC_NAME}/end.sh'." >&2
+  echo "Please run this installation from within its parent directory: './install'." >&2
+
+elif [ ! -e "${SRC_NAME}/init.sh" ]; then
+  echo "ERROR: Missing file '${SRC_NAME}/logs.sh'." >&2
+  echo "Please run this installation from within its parent directory: './install'." >&2
+
+elif [ ! -e "${SRC_NAME}/override.sh" ]; then
+  echo "ERROR: Missing file '${SRC_NAME}/override.sh'." >&2
+  echo "Please run this installation from within its parent directory: './install'." >&2
+
+elif [ ! -e "${SRC_NAME}/${LIB_NAME}/checkers.sh" ]; then
+  echo "ERROR: Missing file '${SRC_NAME}/${LIB_NAME}/checkers.sh'." >&2
+  echo "Please run this installation from within its parent directory: './install'." >&2
+
+elif [ ! -e "${SRC_NAME}/${LIB_NAME}/etc.sh" ]; then
+  echo "ERROR: Missing file '${SRC_NAME}/${LIB_NAME}/etc.sh'." >&2
+  echo "Please run this installation from within its parent directory: './install'." >&2
+
+elif [ ! -e "${SRC_NAME}/${LIB_NAME}/getters.sh" ]; then
+  echo "ERROR: Missing file '${SRC_NAME}/${LIB_NAME}/getters.sh'." >&2
+  echo "Please run this installation from within its parent directory: './install'." >&2
+
+elif [ ! -e "${SRC_NAME}/${LIB_NAME}/loggers.sh" ]; then
+  echo "ERROR: Missing file '${SRC_NAME}/${LIB_NAME}/loggers.sh'." >&2
+  echo "Please run this installation from within its parent directory: './install'." >&2
+
+elif [ ! -e "${SRC_NAME}/${LIB_NAME}/prompters.sh" ]; then
+  echo "ERROR: Missing file '${SRC_NAME}/${LIB_NAME}/prompters.sh'." >&2
+  echo "Please run this installation from within its parent directory: './install'." >&2
+
+elif [ ! -e "${SRC_NAME}/${LIB_NAME}/setters.sh" ]; then
+  echo "ERROR: Missing file '${SRC_NAME}/${LIB_NAME}/setters.sh'." >&2
+  echo "Please run this installation from within its parent directory: './install'." >&2
+
+else
+
+  chmod 766 "${BIN_NAME}.sh"
+
+  ln -s "${PWD}/${SRC_NAME}" ${SRC_PATH}
+  ln -s "${PWD}/${BIN_NAME}.sh" ${BIN_PATH}
+
+  echo "Succesful installation of ${BIN_NAME}!"
+
+fi

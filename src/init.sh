@@ -2,10 +2,33 @@
 
 # ---------------------------------------- #
 # Programer: PEDRO RIVERO
-# Date: Nov 3 2019
+# Date: Nov 4 2019
 # ---------------------------------------- #
 
-## ---- PARSER ---- ##
+## ---- FUNCTIONS ---- ##
+
+# Uses global options
+init_backup_mode () {
+  # PARSING
+  local ARGS=$@
+  # FUNCTIONALITY
+  tabs 4
+  reset_options
+  echo -en "\n"
+  argument_parser $ARGS
+  create_log_file
+}
+
+# Uses global options
+reset_options () {
+  OVERRIDE=""
+
+  QUIET=''
+  DRY_RUN=''
+  LOG='set'
+  WIPE=''
+  FORCE=''
+}
 
 # Uses global options
 argument_parser () {
@@ -18,12 +41,12 @@ argument_parser () {
       ;;
     -d|--dry-run)
       DRY_RUN='set'
-      NO_LOG='set'
+      LOG=''
       echo -e "$(tput setab 7)$(tput setaf 0) DRY-RUN $(tput sgr 0)\n"
       shift
       ;;
     -n|--no-log)
-      NO_LOG='set'
+      LOG=''
       shift
       ;;
     -o|--override)
@@ -80,6 +103,15 @@ verify_arguments
 
 }
 
+# Uses global options and log
+create_log_file () {
+  if [ ! -z $LOG ]
+  then
+    mkdir $LOG_DIRECTORY 2> /dev/null
+    touch $LOG_FILE 2> /dev/null
+  fi
+}
+
 # Uses global options
 standardize_global_dir_array () {
   # PARSING
@@ -96,25 +128,6 @@ standardize_global_dir_array () {
 verify_arguments (){
   verify_directories
   verify_overrides
-}
-
-# Uses global options
-reset_options () {
-  OVERRIDE=""
-
-  QUIET=''
-  DRY_RUN=''
-  NO_LOG=''
-  WIPE=''
-  FORCE=''
-}
-
-# Uses generic global
-global_to_array () {
-  # PARSING
-  local global_name=$1
-  # FUNCTIONALITY
-  IFS=' ' read -ra $global_name <<< $(eval echo '$'$global_name)
 }
 
 # Uses global options
@@ -135,73 +148,4 @@ verify_overrides () {
       warning_log "OVERRIDE FAILED: \"${OVERRIDE[$i]}\" is not in any source."
     fi
   done
-}
-
-# Uses global options
-verify_number_of_directories (){
-  local number_of_directories=$1
-  if (( $number_of_directories % 2 != 0 ))
-  then
-    error_log "Not a backup location for each source directory."
-  else
-    return 0
-  fi
-}
-
-# Uses global options
-verify_directory_type (){
-  local directory=$1
-  if [ ! -d $directory ]; then
-    error_log "\"$directory\" is not a directory."
-  else
-    return 0
-  fi
-}
-
-# Uses global options
-override_in_source_dir () {
-  # PARSING
-  local overrider=$1
-  # FUNCTIONALITY
-  local number_of_directories=${#DIRECTORY_PAIRS[@]}
-  for (( i = 0; i < $number_of_directories; i+=2 )); do
-    if is_in_directory $overrider ${DIRECTORY_PAIRS[$i]}
-    then
-      return 0  #TRUE
-    else
-      return 1  #FALSE
-    fi
-  done
-}
-
-# Uses global options
-ask_confirmation () {
-  # PARSING
-  local message=$1
-  # FUNCTIONALITY
-  local confirmation=''
-  if [ -z $FORCE ]
-  then
-    while ! confirm_answer $confirmation
-    do
-      read -p "Confirm $1 [y/n]: " confirmation
-    done
-  fi
-}
-
-
-confirm_answer () {
-  # PARSING
-  local confirmation=$1
-  # FUNCTIONALITY
-  if [[ $confirmation == 'n' ]] || [[ $confirmation == 'N' ]]
-  then
-    echo -e "Backup cancelled... \n"
-    exit 0
-  elif [[ $confirmation == 'y' ]] || [[ $confirmation == 'Y' ]]
-  then
-    return 0  #TRUE
-  else
-    return 1  #FALSE
-  fi
 }

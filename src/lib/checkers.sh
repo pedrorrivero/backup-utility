@@ -5,11 +5,43 @@
 # Date: Nov 4 2019
 # ---------------------------------------- #
 
-get_sorted_tree () {
+## ---- FUNCTIONS ---- ##
+
+# Uses global options
+verify_number_of_directories (){
+  local number_of_directories=$1
+  if (( $number_of_directories % 2 != 0 ))
+  then
+    error_log "Not a backup location for each source directory."
+  else
+    return 0
+  fi
+}
+
+# Uses global options
+verify_directory_type (){
+  local directory=$1
+  if [ ! -d $directory ]; then
+    error_log "\"$directory\" is not a directory."
+  else
+    return 0
+  fi
+}
+
+# Uses global options
+override_in_source_dir () {
   # PARSING
-  local BASE_DIR=$1
+  local overrider=$1
   # FUNCTIONALITY
-  find ${BASE_DIR} | sort
+  local number_of_directories=${#DIRECTORY_PAIRS[@]}
+  for (( i = 0; i < $number_of_directories; i+=2 )); do
+    if is_in_directory $overrider ${DIRECTORY_PAIRS[$i]}
+    then
+      return 0  #TRUE
+    else
+      return 1  #FALSE
+    fi
+  done
 }
 
 
@@ -54,34 +86,4 @@ is_in_directory () {
   else
     return 1  #FALSE
   fi
-}
-
-
-get_relative_path () {
-  # PARSING
-  local path=$1
-  local BASE_DIR=$2
-  # FUNCTIONALITY
-  echo ${path} | sed -e "s,^${BASE_DIR},," -e "s,^\/,,"
-}
-
-
-get_backup_path () {
-  # PARSING
-  local source=$1
-  local SOURCE_DIR=$2
-  local BACKUP_DIR=$3
-  # FUNCTIONALITY
-  if is_in_directory $source $SOURCE_DIR
-  then
-    echo -e "${BACKUP_DIR}/$(get_relative_path $source $SOURCE_DIR)"
-  else
-    return 1
-  fi
-}
-
-
-get_realpath() {
-  local path=$(echo $1 | sed "s,/*$,,")
-  [[ $path = /* ]] && echo "$path" || echo "$PWD/${path#./}"
 }

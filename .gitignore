@@ -2,4 +2,4 @@
 *.logs
 *.log
 test*
-preconfig-dirs
+preconfig-*

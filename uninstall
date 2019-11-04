@@ -1,0 +1,22 @@
+#!/usr/local/bin/bash
+
+# ---------------------------------------- #
+# Programer: PEDRO RIVERO
+# Date: Nov 4 2019
+# ---------------------------------------- #
+
+BIN_NAME='prr-backup'
+SRC_NAME='src'
+LIB_NAME='lib'
+INSTALLATION_LOCATION='/usr/local/bin'
+
+BIN_PATH="${INSTALLATION_LOCATION}/${BIN_NAME}"
+SRC_PATH="${INSTALLATION_LOCATION}/${BIN_NAME}-${SRC_NAME}"
+
+
+## ---- UNINSTALL ---- ##
+
+rm -rf ${SRC_PATH} 2>/dev/null
+rm -rf ${BIN_PATH} 2>/dev/null
+
+echo "Succesful uninstall of ${BIN_NAME}!"
