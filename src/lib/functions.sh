@@ -75,7 +75,7 @@ do_backup () {
 }
 
 # Uses global options
-override_if_requested () {
+override_if_wet () {
   # PARSING
   local target=$1
   # FUNCTIONALITY
@@ -99,7 +99,7 @@ override_requested_subdirecrories () {
     if [ -d $target ]
     then
       override_log $target
-      override_if_requested $target
+      override_if_wet $target
     else
       warning_log "OVERRIDE FAILED: \"$target\" is not a subdirectory."
     fi

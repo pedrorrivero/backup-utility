@@ -74,15 +74,15 @@ argument_parser () {
   esac
 done
 
-standardize_global "OVERRIDE"
-standardize_global "DIRECTORY_PAIRS"
+standardize_global_dir_array "OVERRIDE"
+standardize_global_dir_array "DIRECTORY_PAIRS"
 
 verify_arguments
 
 }
 
 # Uses global options
-standardize_global () {
+standardize_global_dir_array () {
   # PARSING
   local global_name=$1
   # FUNCTIONALITY
@@ -95,11 +95,8 @@ standardize_global () {
 
 # Uses global options
 verify_arguments (){
-  local number_of_directories=${#DIRECTORY_PAIRS[@]}
-  verify_argument_number $number_of_directories
-  for (( i = 0; i < $number_of_directories; i++ )); do
-    verify_argument_kind ${DIRECTORY_PAIRS[$i]}
-  done
+  verify_directories
+  verify_overrides
 }
 
 # Uses global options
@@ -122,7 +119,28 @@ global_to_array () {
 }
 
 # Uses global options
-verify_argument_number (){
+verify_directories () {
+  local number_of_directories=${#DIRECTORY_PAIRS[@]}
+  verify_number_of_directories $number_of_directories
+  for (( i = 0; i < $number_of_directories; i++ )); do
+    verify_argument_kind ${DIRECTORY_PAIRS[$i]}
+  done
+}
+
+# Uses global options
+verify_overrides () {
+  local number_of_overrides=${#OVERRIDE[@]}
+  for (( i = 0; i < $number_of_overrides; i++ )); do
+    verify_argument_kind ${OVERRIDE[$i]}
+    if ! override_in_source_dir ${OVERRIDE[$i]}
+    then
+      warning_log "OVERRIDE FAILED: \"${OVERRIDE[$i]}\" is not in source."
+    fi
+  done
+}
+
+# Uses global options
+verify_number_of_directories (){
   local number_of_directories=$1
   if (( $number_of_directories % 2 != 0 ))
   then
@@ -142,6 +160,22 @@ verify_argument_kind (){
   else
     return 0
   fi
+}
+
+# Uses global options
+override_in_source_dir () {
+  # PARSING
+  local overrider=$1
+  # FUNCTIONALITY
+  local number_of_directories=${#DIRECTORY_PAIRS[@]}
+  for (( i = 0; i < $number_of_directories; i+=2 )); do
+    if is_in_directory $overrider ${DIRECTORY_PAIRS[$i]}
+    then
+      return 0  #TRUE
+    else
+      return 1  #FALSE
+    fi
+  done
 }
 
 # Uses global options

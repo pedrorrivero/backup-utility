@@ -37,7 +37,9 @@ is_in_directory () {
   local TARGET_DIR=$2
   # FUNCTIONALITY
   if [[ $target == ${TARGET_DIR}'/'* ]]; then
-    return 0
+    return 0  #TRUE
+  else
+    return 1  #FALSE
   fi
 }
 
