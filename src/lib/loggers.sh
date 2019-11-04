@@ -15,15 +15,16 @@ else
   LOG_PATH='.'
 fi
 
-LOG_DIRECTORY_NAME='backup.logs'
+LOG_DIRECTORY_NAME='logs'
 LOG_FILENAME="$(date -u '+%Y-%m-%dT%H:%M:%SZ.log')"
 
 LOG_DIRECTORY=$(get_realpath "$LOG_PATH/$LOG_DIRECTORY_NAME")
 LOG_FILE="$LOG_DIRECTORY/$LOG_FILENAME"
 
+
 ## ---- LOG FUNCTIONS ---- ##
 
-# Uses global options and log
+# Uses log
 new_subdirectory_log () {
   # PARSING
   local subdirectory=$1
@@ -31,16 +32,12 @@ new_subdirectory_log () {
   # FUNCTIONALITY
   local highlight="\t MAKING SUBDIRECTORY IN BACKUP: "
   local log=" $subdirectory "
+  local color='3'
 
-  if [ -z $QUIET ]; then
-    echo -e "$(tput setaf 3)$highlight$(tput sgr 0)$log"
-  fi
-  if [ ! -z $LOG ]; then
-    echo -e "$highlight$log" >> $LOG_FILE
-  fi
+  stdout_log_echo "$highlight" "$log" "$color"
 }
 
-# Uses global options and log
+# Uses log
 backup_log () {
   # PARSING
   local SOURCE_DIR=$1
@@ -49,16 +46,12 @@ backup_log () {
   # FUNCTIONALITY
   local highlight=" BACKING-UP: "
   local log=" $SOURCE_DIR -> $BACKUP_DIR "
+  local color='6'
 
-  if [ -z $QUIET ]; then
-    echo -e "$(tput setaf 6)$highlight$(tput sgr 0)$log"
-  fi
-  if [ ! -z $LOG ]; then
-    echo -e "$highlight$log" >> $LOG_FILE
-  fi
+  stdout_log_echo "$highlight" "$log" "$color"
 }
 
-# Uses global options and log
+# Uses log
 file_log () {
   # PARSING
   local source=$1
@@ -67,16 +60,12 @@ file_log () {
   # FUNCTIONALITY
   local highlight="\t CREATING FILE BACKUP: "
   local log=" $source -> $backup "
+  local color='2'
 
-  if [ -z $QUIET ]; then
-    echo -e "$(tput setaf 2)$highlight$(tput sgr 0)$log"
-  fi
-  if [ ! -z $LOG ]; then
-    echo -e "$highlight$log" >> $LOG_FILE
-  fi
+  stdout_log_echo "$highlight" "$log" "$color"
 }
 
-# Uses global options and log
+# Uses log
 override_log () {
   # PARSING
   local backup=$1
@@ -84,9 +73,57 @@ override_log () {
   # FUNCTIONALITY
   local highlight=" OVERRIDING: "
   local log=" $backup "
+  local color='6'
 
+  stdout_log_echo "$highlight" "$log" "$color"
+}
+
+# Uses log
+wipe_log () {
+  # PARSING
+  local BACKUP_DIR=$1
+  # FUNCTIONALITY
+  local highlight=" WIPING OUT BACKUP: "
+  local log" $BACKUP_DIR "
+  local color='6'
+
+  stdout_log_echo "$highlight" "$log" "$color"
+}
+
+# Uses log
+warning_log () {
+  # PARSING
+  local message=$1
+  # FUNCTIONALITY
+  local highlight=" WARNING "
+  local color='3'
+
+  stdout_log_echo "$highlight" "$message" "$color"
+}
+
+# Uses log
+error_log () {
+  # PARSING
+  local message=$1
+  # FUNCTIONALITY
+  local highlight=" ERROR "
+  local color='1'
+
+  stdout_log_echo "$highlight" "$message" "$color"
+}
+
+
+## ---- LOG ECHOS ---- ##
+
+# Uses global options and log
+stdout_log_echo () {
+  # PARSING
+  local highlight=$1
+  local log=$2
+  local color=$3
+  # FUNCTIONALITY
   if [ -z $QUIET ]; then
-    echo -e "$(tput setaf 6)$highlight$(tput sgr 0)$log"
+    echo -e "$(tput setaf $color)$highlight$(tput sgr 0)$log"
   fi
   if [ ! -z $LOG ]; then
     echo -e "$highlight$log" >> $LOG_FILE
@@ -94,39 +131,14 @@ override_log () {
 }
 
 # Uses global options and log
-wipe_log () {
-  # FUNCTIONALITY
-  local log=" WIPING OUT BACKUP "
-
-  if [ -z $QUIET ]; then
-    echo -e "$(tput setaf 6)$log$(tput sgr 0)"
-  fi
-  if [ ! -z $LOG ]; then
-    echo -e $log >> $LOG_FILE
-  fi
-}
-
-# Uses global options and log
-warning_log () {
+stderr_log_echo () {
   # PARSING
-  local message=$1
+  local highlight=$1
+  local message=$2
+  local color=$3
   # FUNCTIONALITY
-  local highlight=" WARNING "
   echo -e "$(tput setab 1)$(tput setaf 7)$highlight$(tput sgr 0)"\
-  "$message" >&2
-  if [ ! -z $LOG ]; then
-    echo -e "$highlight$message" >> $LOG_FILE
-  fi
-}
-
-# Uses global options and log
-error_log () {
-  # PARSING
-  local message=$1
-  # FUNCTIONALITY
-  local highlight=" ERROR "
-  echo -e "$(tput setab 1)$(tput setaf 7)$highlight$(tput sgr 0)"\
-  "$(tput setaf 1)$message$(tput sgr 0)" >&2
+  "$(tput setaf $3)$message$(tput sgr 0)" >&2
   if [ ! -z $LOG ]; then
     echo -e "$highlight$message" >> $LOG_FILE
   fi
