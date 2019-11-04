@@ -7,7 +7,7 @@
 
 ## ---- FUNCTIONS ---- ##
 
-# Uses global options
+# Uses global options, getters, loggers and overrride
 override_requested_subdirecrories () {
   # PARSING
   local SOURCE_DIR=$1
@@ -29,7 +29,7 @@ override_requested_subdirecrories () {
 }
 
 
-# Uses global options
+# Uses global options and prompter
 override_if_wet () {
   # PARSING
   local target=$1

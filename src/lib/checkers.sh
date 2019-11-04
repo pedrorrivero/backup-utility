@@ -18,6 +18,12 @@ is_even (){
 }
 
 
+is_set () {
+  #TODO
+  :
+}
+
+
 is_directory (){
   local directory=$1
   if [ ! -d $directory ]; then

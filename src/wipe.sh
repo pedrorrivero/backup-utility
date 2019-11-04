@@ -7,7 +7,7 @@
 
 ## ---- FUNCTIONS ---- ##
 
-# Uses global options
+# Uses global options, loggers and prompters
 wipe_backup_if_requested () {
   # PARSING
   local target=$1

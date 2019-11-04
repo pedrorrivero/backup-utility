@@ -15,6 +15,12 @@ get_sorted_tree () {
 }
 
 
+get_array_size () {
+  #TODO
+  :
+}
+
+
 get_realpath() {
   local path=$(echo $1 | sed "s,/*$,,")
   [[ $path = /* ]] && echo "$path" || echo "$PWD/${path#./}"
@@ -36,8 +42,7 @@ get_backup_path () {
   local SOURCE_DIR=$2
   local BACKUP_DIR=$3
   # FUNCTIONALITY
-  if is_in_directory $source $SOURCE_DIR
-  then
+  if is_in_directory $source $SOURCE_DIR; then
     echo -e "${BACKUP_DIR}/$(get_relative_path $source $SOURCE_DIR)"
   else
     return 1

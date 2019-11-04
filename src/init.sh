@@ -7,7 +7,7 @@
 
 ## ---- FUNCTIONS ---- ##
 
-# Uses global options
+# Uses init and setters
 init_backup_mode () {
   # PARSING
   local ARGS=$@
@@ -19,18 +19,7 @@ init_backup_mode () {
   create_log_file
 }
 
-# Uses global options
-reset_options () {
-  OVERRIDE=""
-
-  QUIET=''
-  DRY_RUN=''
-  LOG='set'
-  WIPE=''
-  FORCE=''
-}
-
-# Uses global options
+# Uses global options, etc and init
 argument_parser () {
 
   while (( "$#" )); do
@@ -100,7 +89,8 @@ done
 standardize_global_dir_array "OVERRIDE"
 standardize_global_dir_array "DIRECTORY_PAIRS"
 
-verify_arguments
+verify_directories
+verify_overrides
 
 }
 
@@ -113,25 +103,19 @@ create_log_file () {
   fi
 }
 
-# Uses global options
+# Uses global options, getters and setters
 standardize_global_dir_array () {
   # PARSING
   local global_name=$1
   # FUNCTIONALITY
-  global_to_array $global_name
+  set_global_to_array $global_name
   local global_size=$(eval echo '${#'$global_name'[@]}')
   for (( i=0; i<$global_size; i++ )); do
     eval $global_name'['$i']=$(get_realpath ${'$global_name'['$i']})'
   done
 }
 
-# Uses global options
-verify_arguments (){
-  verify_directories
-  verify_overrides
-}
-
-# Uses global options
+# Uses global options, checkers, etc and loggers
 verify_directories () {
   local number_of_directories=${#DIRECTORY_PAIRS[@]}
   if ! is_even $number_of_directories; then
@@ -146,7 +130,7 @@ verify_directories () {
   done
 }
 
-# Uses global options
+# Uses global options, checkers and loggers
 verify_overrides () {
   local number_of_overrides=${#OVERRIDE[@]}
   for (( i = 0; i < $number_of_overrides; i++ )); do
