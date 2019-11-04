@@ -15,15 +15,21 @@ get_sorted_tree () {
 }
 
 
+get_realpath() {
+  local path=$(echo $1 | sed "s,/*$,,")
+  [[ $path = /* ]] && echo "$path" || echo "$PWD/${path#./}"
+}
+
+
 get_relative_path () {
   # PARSING
   local path=$1
   local BASE_DIR=$2
   # FUNCTIONALITY
-  echo ${path} | sed -e "s,^${BASE_DIR},," -e "s,^\/,,"
+  echo ${path} | sed -e "s,^${BASE_DIR},," -e "s,^\/*,,"
 }
 
-
+# Uses checker and getter
 get_backup_path () {
   # PARSING
   local source=$1
@@ -36,10 +42,4 @@ get_backup_path () {
   else
     return 1
   fi
-}
-
-
-get_realpath() {
-  local path=$(echo $1 | sed "s,/*$,,")
-  [[ $path = /* ]] && echo "$path" || echo "$PWD/${path#./}"
 }
