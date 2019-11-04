@@ -9,10 +9,14 @@
 
 # Uses global options
 init_backup_mode () {
+  # PARSING
+  local ARGS=$@
+  # FUNCTIONALITY
   tabs 4
   reset_options
-  create_log_file
   echo -en "\n"
+  argument_parser $ARGS
+  create_log_file
 }
 
 # Uses global options and log

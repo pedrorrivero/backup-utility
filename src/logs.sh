@@ -2,18 +2,26 @@
 
 # ---------------------------------------- #
 # Programer: PEDRO RIVERO
-# Date: Nov 3 2019
+# Date: Nov 4 2019
 # ---------------------------------------- #
 
-LOG_PATH='.'
+## ---- LOG FILES ---- ##
+
+if [ -e '/usr/local/bin/prr-backup-src' ]; then
+  # AFTER CONFIGURATION THIS WILL BE USED
+  LOG_PATH='/usr/local/bin/prr-backup-src/..'
+else
+  # BEFORE CONFIGURATION THIS WILL BE USED
+  LOG_PATH='.'
+fi
+
 LOG_DIRECTORY_NAME='backup.logs'
 LOG_FILENAME="$(date -u '+%Y-%m-%dT%H:%M:%SZ.log')"
 
 LOG_DIRECTORY=$(get_realpath "$LOG_PATH/$LOG_DIRECTORY_NAME")
 LOG_FILE="$LOG_DIRECTORY/$LOG_FILENAME"
 
-## ---- LOGS ---- ##
-## These should be done with a parent class (unsupported)
+## ---- LOG FUNCTIONS ---- ##
 
 # Uses global options and log
 new_subdirectory_log () {
