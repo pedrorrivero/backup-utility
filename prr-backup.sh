@@ -71,10 +71,10 @@ backup () {
     local SOURCE_DIR=${DIRECTORY_PAIRS[$i]}
     local BACKUP_DIR=${DIRECTORY_PAIRS[$i+1]}
 
-    override_requested_subdirecrories $SOURCE_DIR $BACKUP_DIR
-    wipe_backup_if_requested $BACKUP_DIR
+    override_requested_subdirecrories "$SOURCE_DIR" "$BACKUP_DIR"
+    wipe_backup_if_requested "$BACKUP_DIR"
 
-    do_backup $SOURCE_DIR $BACKUP_DIR
+    do_backup "$SOURCE_DIR" "$BACKUP_DIR"
   done
 
   end_backup_mode

@@ -14,8 +14,8 @@ wipe_backup_if_requested () {
   # FUNCTIONALITY
   if [ ! -z $WIPE ] && [ -z $DRY_RUN ] && [ ! -z $target ]
   then
-    wipe_log
+    wipe_log $target
     ask_confirmation "Confirm wipe backup \"$target\""
-    rm -rf $target/*
+    rm -rf "$target/"*
   fi
 }

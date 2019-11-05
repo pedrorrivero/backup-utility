@@ -39,7 +39,7 @@ is_in_directory () {
   local target=$1
   local TARGET_DIR=$2
   # FUNCTIONALITY
-  if [ -e $target ] && [[ $target == ${TARGET_DIR}'/'* ]]
+  if [ -e "$target" ] && [[ "$target" == "${TARGET_DIR}/"* ]]
   then
     return 0  #TRUE
   else
@@ -54,13 +54,14 @@ is_in_source_directory () {
   # FUNCTIONALITY
   local number_of_directories=${#DIRECTORY_PAIRS[@]}
   for (( i = 0; i < $number_of_directories; i+=2 )); do
-    if is_in_directory $overrider ${DIRECTORY_PAIRS[$i]}
+    if is_in_directory "$overrider" "${DIRECTORY_PAIRS[$i]}"
     then
       return 0  #TRUE
     else
-      return 1  #FALSE
+      :
     fi
   done
+  return 1  #FALSE
 }
 
 # Uses log and etc

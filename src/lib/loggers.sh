@@ -84,7 +84,7 @@ wipe_log () {
   local BACKUP_DIR=$1
   # FUNCTIONALITY
   local highlight=" WIPING OUT BACKUP: "
-  local log" $BACKUP_DIR "
+  local log=" $BACKUP_DIR "
   local color='6'
 
   stdout_log_echo "$highlight" "$log" "$color"

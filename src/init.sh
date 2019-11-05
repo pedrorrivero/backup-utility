@@ -134,7 +134,7 @@ verify_directories () {
 verify_overrides () {
   local number_of_overrides=${#OVERRIDE[@]}
   for (( i = 0; i < $number_of_overrides; i++ )); do
-    if ! is_in_source_directory ${OVERRIDE[$i]}
+    if ! is_in_source_directory "${OVERRIDE[$i]}"
     then
       warning_log "OVERRIDE FAILED: \"${OVERRIDE[$i]}\" is not in any source."
     fi

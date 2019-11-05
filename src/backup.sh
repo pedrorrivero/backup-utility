@@ -35,13 +35,17 @@ backup_if_new () {
   local source=$1
   local backup=$2
   # FUNCTIONALITY
-  if is_new_subdirectory $source $backup && [ -z $DRY_RUN ]
+  if is_new_subdirectory $source $backup
   then
     new_subdirectory_log $backup
-    mkdir $backup
-  elif is_new_file $source $backup && [ -z $DRY_RUN ]
+    if [ -z $DRY_RUN ]; then
+      mkdir $backup
+    fi
+  elif is_new_file $source $backup
   then
     file_log $source $backup
-    cp $source $backup
+    if [ -z $DRY_RUN ]; then
+      cp $source $backup
+    fi
   fi
 }
