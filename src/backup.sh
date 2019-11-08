@@ -33,7 +33,9 @@ do_backup () {
 backup_if_new () {
   # PARSING
   local source=$1
+  source=$(echo "$source" | sed "s,\\\\\\\*,,g")
   local backup=$2
+  backup=$(echo "$backup" | sed "s,\\\\\\\*,,g")
   # FUNCTIONALITY
   local stderr=''
   if is_new_subdirectory "$source" "$backup"

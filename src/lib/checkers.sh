@@ -39,6 +39,7 @@ is_in_directory () {
   local target=$1
   local TARGET_DIR=$2
   # FUNCTIONALITY
+  target=$(echo "$target" | sed "s,\\\*,,g")
   if [ -e "$target" ] && [[ "$target" == "${TARGET_DIR}/"* ]]
   then
     return 0  #TRUE
