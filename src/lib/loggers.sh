@@ -98,7 +98,7 @@ warning_log () {
   local color='3'
   local highlight=" WARNING "
 
-  stdout_log_echo "$color" "$highlight" "$message"
+  stderr_log_echo "$color" "$highlight" "$message"
 }
 
 # Uses log
@@ -109,7 +109,7 @@ error_log () {
   local color='1'
   local highlight=" ERROR "
 
-  stdout_log_echo "$color" "$highlight" "$message"
+  stderr_log_echo "$color" "$highlight" "$message"
 }
 
 
@@ -138,7 +138,7 @@ stderr_log_echo () {
   local log=$3
   # FUNCTIONALITY
   echo -e "$(tput setab 1)$(tput setaf 7)$highlight$(tput sgr 0)"\
-  "$(tput setaf $3)$message$(tput sgr 0)" >&2
+  "$(tput setaf $color)$message$(tput sgr 0)" >&2
   if [ ! -z $LOG ]; then
     echo -e "$highlight$message" >> $LOG_FILE
   fi

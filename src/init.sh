@@ -14,7 +14,6 @@ init_backup_mode () {
   # FUNCTIONALITY
   tabs 4
   reset_options
-  echo -en "\n"
   argument_parser $ARGS
   create_log_file
 }
@@ -31,7 +30,7 @@ argument_parser () {
     -d|--dry-run)
       DRY_RUN='set'
       LOG=''
-      echo -e "$(tput setab 7)$(tput setaf 0) DRY-RUN $(tput sgr 0)\n"
+      echo -e "\n$(tput setab 7)$(tput setaf 0) DRY-RUN $(tput sgr 0)"
       shift
       ;;
     -n|--no-log)
@@ -124,7 +123,7 @@ verify_directories () {
   fi
   for (( i = 0; i < $number_of_directories; i++ )); do
     if ! is_directory ${DIRECTORY_PAIRS[$i]}; then
-      error_log "\"$directory\" is not a directory."
+      error_log "\"${DIRECTORY_PAIRS[$i]}\" is not a directory."
       custom_exit 1
     fi
   done

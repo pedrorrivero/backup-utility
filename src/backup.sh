@@ -35,17 +35,24 @@ backup_if_new () {
   local source=$1
   local backup=$2
   # FUNCTIONALITY
+  local stderr=''
   if is_new_subdirectory $source $backup
   then
     new_subdirectory_log $backup
     if [ -z $DRY_RUN ]; then
-      mkdir $backup
+      stderr="$(mkdir $backup 2>&1)"
+      if [ ! -z "$stderr" ]; then
+        warning_log "$stderr"
+      fi
     fi
   elif is_new_file $source $backup
   then
     file_log $source $backup
     if [ -z $DRY_RUN ]; then
-      cp $source $backup
+      stderr="$(cp $source $backup 2>&1)"
+      if [ ! -z "$stderr" ]; then
+        warning_log "$stderr"
+      fi
     fi
   fi
 }
