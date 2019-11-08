@@ -72,7 +72,7 @@ override_log () {
 
   # FUNCTIONALITY
   local color='6'
-  local highlight=" OVERRIDING: "
+  local highlight="\n OVERRIDING: "
   local log=" $backup "
 
   stdout_log_echo "$color" "$highlight" "$log"
@@ -84,7 +84,7 @@ wipe_log () {
   local BACKUP_DIR=$1
   # FUNCTIONALITY
   local color='6'
-  local highlight=" WIPING OUT BACKUP: "
+  local highlight="\n WIPING OUT BACKUP: "
   local log=" $BACKUP_DIR "
 
   stdout_log_echo "$color" "$highlight" "$log"
