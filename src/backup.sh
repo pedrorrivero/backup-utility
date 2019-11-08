@@ -20,11 +20,11 @@ do_backup () {
 
   for source in "${source_tree[@]:1}"
   do
-    backup=$(get_backup_path $source $SOURCE_DIR $BACKUP_DIR)
-    if [ -z $backup ]; then
+    backup=$(get_backup_path "$source" "$SOURCE_DIR" "$BACKUP_DIR")
+    if [ -z "$backup" ]; then
       :
     else
-      backup_if_new $source $backup
+      backup_if_new "$source" "$backup"
     fi
   done
 }
@@ -36,20 +36,20 @@ backup_if_new () {
   local backup=$2
   # FUNCTIONALITY
   local stderr=''
-  if is_new_subdirectory $source $backup
+  if is_new_subdirectory "$source" "$backup"
   then
-    new_subdirectory_log $backup
-    if [ -z $DRY_RUN ]; then
-      stderr="$(mkdir $backup 2>&1)"
+    new_subdirectory_log "$backup"
+    if [ -z "$DRY_RUN" ]; then
+      stderr="$(mkdir "$backup" 2>&1)"
       if [ ! -z "$stderr" ]; then
         warning_log "$stderr"
       fi
     fi
-  elif is_new_file $source $backup
+  elif is_new_file "$source" "$backup"
   then
-    file_log $source $backup
-    if [ -z $DRY_RUN ]; then
-      stderr="$(cp $source $backup 2>&1)"
+    file_log "$source" "$backup"
+    if [ -z "$DRY_RUN" ]; then
+      stderr="$(cp "$source" "$backup" 2>&1)"
       if [ ! -z "$stderr" ]; then
         warning_log "$stderr"
       fi

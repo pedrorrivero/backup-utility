@@ -23,5 +23,5 @@ set_global_to_array () {
   # PARSING
   local global_name=$1
   # FUNCTIONALITY
-  IFS=' ' read -ra $global_name <<< $(eval echo '${'$global_name'[@]}')
+  IFS=' ' read -ra "$global_name" <<< $(eval echo '${'$global_name'[@]}')
 }

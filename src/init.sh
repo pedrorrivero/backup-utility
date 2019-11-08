@@ -95,10 +95,10 @@ verify_overrides
 
 # Uses global options and log
 create_log_file () {
-  if [ ! -z $LOG ]
+  if [ ! -z "$LOG" ]
   then
-    mkdir $LOG_DIRECTORY 2> /dev/null
-    touch $LOG_FILE 2> /dev/null
+    mkdir "$LOG_DIRECTORY" 2> /dev/null
+    touch "$LOG_FILE" 2> /dev/null
   fi
 }
 
@@ -107,7 +107,7 @@ standardize_global_dir_array () {
   # PARSING
   local global_name=$1
   # FUNCTIONALITY
-  set_global_to_array $global_name
+  set_global_to_array "$global_name"
   local global_size=$(eval echo '${#'$global_name'[@]}')
   for (( i=0; i<$global_size; i++ )); do
     eval $global_name'['$i']=$(get_realpath ${'$global_name'['$i']})'
@@ -122,7 +122,7 @@ verify_directories () {
     custom_exit 1
   fi
   for (( i = 0; i < $number_of_directories; i++ )); do
-    if ! is_directory ${DIRECTORY_PAIRS[$i]}; then
+    if ! is_directory "${DIRECTORY_PAIRS[$i]}"; then
       error_log "\"${DIRECTORY_PAIRS[$i]}\" is not a directory."
       custom_exit 1
     fi

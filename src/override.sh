@@ -16,12 +16,12 @@ override_requested_subdirecrories () {
   local target=''
   for subdirectory in "${OVERRIDE[@]}"
   do
-    target=$(get_backup_path $subdirectory $SOURCE_DIR $BACKUP_DIR)
-    if [ -z $target ]; then
+    target=$(get_backup_path "$subdirectory" "$SOURCE_DIR" "$BACKUP_DIR")
+    if [ -z "$target" ]; then
       :
-    elif [ -e $target ]; then
-      override_log $target
-      override_if_wet $target
+    elif [ -e "$target" ]; then
+      override_log "$target"
+      override_if_wet "$target"
     else
       warning_log "NOTHING TO OVERRIDE: \"$target\" does not exist."
     fi
@@ -34,9 +34,9 @@ override_if_wet () {
   # PARSING
   local target=$1
   # FUNCTIONALITY
-  if [ -z $DRY_RUN ]
+  if [ -z "$DRY_RUN" ]
   then
     ask_confirmation "Confirm override subdirectory \"$target\""
-    rm -rf $target
+    rm -rf "$target"
   fi
 }

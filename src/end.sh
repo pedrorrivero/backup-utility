@@ -9,7 +9,7 @@
 
 # Uses global options and log
 end_backup_mode () {
-  if [ ! -z $LOG ]
+  if [ ! -z "$LOG" ]
   then
     echo -e "\n$(tput setab 0)$(tput setaf 7) Logs saved to: $(tput sgr 0) $LOG_FILE \n"
   else

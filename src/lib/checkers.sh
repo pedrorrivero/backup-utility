@@ -26,7 +26,7 @@ is_set () {
 
 is_directory (){
   local directory=$1
-  if [ ! -d $directory ]; then
+  if [ ! -d "$directory" ]; then
     return 1  #FALSE
   else
     return 0  #TRUE
@@ -70,10 +70,10 @@ is_new_file () {
   local source=$1
   local backup=$2
   # FUNCTIONALITY
-  if [ ! -d $source ] && [ -d $backup ]; then
+  if [ ! -d "$source" ] && [ -d "$backup" ]; then
     error_log "CONFLICT: non-directory \"$source\" -> directory \"$backup\"."
     custom_exit 1
-  elif [ ! -d $source ] && [ ! $backup -nt $source ]; then
+  elif [ ! -d "$source" ] && [ ! "$backup" -nt "$source" ]; then
     return 0  #TRUE
   else
     return 1  #FALSE
@@ -86,9 +86,9 @@ is_new_subdirectory () {
   local source=$1
   local backup=$2
   # FUNCTIONALITY
-  if [ -d $source ] && [ ! -e $backup ]; then
+  if [ -d "$source" ] && [ ! -e "$backup" ]; then
     return 0  #TRUE
-  elif [ -d $source ] && [ ! -d $backup ]; then
+  elif [ -d "$source" ] && [ ! -d "$backup" ]; then
     error_log "CONFLICT: directory \"$source\" -> non-directory \"$backup\"."
     custom_exit 1
   else

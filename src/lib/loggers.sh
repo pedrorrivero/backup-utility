@@ -122,10 +122,10 @@ stdout_log_echo () {
   local highlight=$2
   local log=$3
   # FUNCTIONALITY
-  if [ -z $QUIET ]; then
+  if [ -z "$QUIET" ]; then
     echo -e "$(tput setaf $color)$highlight$(tput sgr 0)$log"
   fi
-  if [ ! -z $LOG ]; then
+  if [ ! -z "$LOG" ]; then
     echo -e "$highlight$log" >> $LOG_FILE
   fi
 }
@@ -139,7 +139,7 @@ stderr_log_echo () {
   # FUNCTIONALITY
   echo -e "$(tput setab 1)$(tput setaf 7)$highlight$(tput sgr 0)"\
   "$(tput setaf $color)$message$(tput sgr 0)" >&2
-  if [ ! -z $LOG ]; then
+  if [ ! -z "$LOG" ]; then
     echo -e "$highlight$message" >> $LOG_FILE
   fi
 }

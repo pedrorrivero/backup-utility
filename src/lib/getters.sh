@@ -11,7 +11,8 @@ get_sorted_tree () {
   # PARSING
   local BASE_DIR=$1
   # FUNCTIONALITY
-  find ${BASE_DIR} -not -path '*/\.*' | sort
+  IFS=$'\n'
+  find "${BASE_DIR}" -not -path '*/\.*' | sort
 }
 
 
@@ -23,7 +24,7 @@ get_array_size () {
 
 get_realpath() {
   local path=$(echo $1 | sed "s,/*$,,")
-  [[ $path = /* ]] && echo "$path" || echo "$PWD/${path#./}"
+  [[ "$path" = /* ]] && echo "$path" || echo "$PWD/${path#./}"
 }
 
 
@@ -42,8 +43,8 @@ get_backup_path () {
   local SOURCE_DIR=$2
   local BACKUP_DIR=$3
   # FUNCTIONALITY
-  if is_in_directory $source $SOURCE_DIR; then
-    echo -e "${BACKUP_DIR}/$(get_relative_path $source $SOURCE_DIR)"
+  if is_in_directory "$source" "$SOURCE_DIR"; then
+    echo -e "${BACKUP_DIR}/$(get_relative_path "$source" "$SOURCE_DIR")"
   else
     return 1
   fi
