@@ -12,7 +12,7 @@ get_sorted_tree () {
   local BASE_DIR=$1
   # FUNCTIONALITY
   IFS=$'\n'
-  find "${BASE_DIR}" -not -path '*/\.*' | sed "s,\*,\\\\\\\*,g" | sort
+  find "${BASE_DIR}" -not -path '*/\.*' | sort
 }
 
 
