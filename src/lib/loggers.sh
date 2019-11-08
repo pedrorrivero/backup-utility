@@ -45,7 +45,7 @@ backup_log () {
 
   # FUNCTIONALITY
   local color='6'
-  local highlight=" BACKING-UP: "
+  local highlight="\n$(tput rev) BACKING-UP: "
   local log=" $SOURCE_DIR $(tput setaf $color)->$(tput sgr 0) $BACKUP_DIR "
 
   stdout_log_echo "$color" "$highlight" "$log"
