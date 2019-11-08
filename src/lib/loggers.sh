@@ -30,11 +30,11 @@ new_subdirectory_log () {
   local subdirectory=$1
 
   # FUNCTIONALITY
+  local color='3'
   local highlight="\t MAKING SUBDIRECTORY IN BACKUP: "
   local log=" $subdirectory "
-  local color='3'
 
-  stdout_log_echo "$highlight" "$log" "$color"
+  stdout_log_echo "$color" "$highlight" "$log"
 }
 
 # Uses log
@@ -44,11 +44,11 @@ backup_log () {
   local BACKUP_DIR=$2
 
   # FUNCTIONALITY
-  local highlight=" BACKING-UP: "
-  local log=" $SOURCE_DIR -> $BACKUP_DIR "
   local color='6'
+  local highlight=" BACKING-UP: "
+  local log=" $SOURCE_DIR $(tput setaf $color)->$(tput sgr 0) $BACKUP_DIR "
 
-  stdout_log_echo "$highlight" "$log" "$color"
+  stdout_log_echo "$color" "$highlight" "$log"
 }
 
 # Uses log
@@ -58,11 +58,11 @@ file_log () {
   local backup=$2
 
   # FUNCTIONALITY
-  local highlight="\t CREATING FILE BACKUP: "
-  local log=" $source -> $backup "
   local color='2'
+  local highlight="\t CREATING FILE BACKUP: "
+  local log=" $source $(tput setaf $color)->$(tput sgr 0) $backup "
 
-  stdout_log_echo "$highlight" "$log" "$color"
+  stdout_log_echo "$color" "$highlight" "$log"
 }
 
 # Uses log
@@ -71,11 +71,11 @@ override_log () {
   local backup=$1
 
   # FUNCTIONALITY
+  local color='6'
   local highlight=" OVERRIDING: "
   local log=" $backup "
-  local color='6'
 
-  stdout_log_echo "$highlight" "$log" "$color"
+  stdout_log_echo "$color" "$highlight" "$log"
 }
 
 # Uses log
@@ -83,11 +83,11 @@ wipe_log () {
   # PARSING
   local BACKUP_DIR=$1
   # FUNCTIONALITY
+  local color='6'
   local highlight=" WIPING OUT BACKUP: "
   local log=" $BACKUP_DIR "
-  local color='6'
 
-  stdout_log_echo "$highlight" "$log" "$color"
+  stdout_log_echo "$color" "$highlight" "$log"
 }
 
 # Uses log
@@ -95,10 +95,10 @@ warning_log () {
   # PARSING
   local message=$1
   # FUNCTIONALITY
-  local highlight=" WARNING "
   local color='3'
+  local highlight=" WARNING "
 
-  stdout_log_echo "$highlight" "$message" "$color"
+  stdout_log_echo "$color" "$highlight" "$message"
 }
 
 # Uses log
@@ -106,10 +106,10 @@ error_log () {
   # PARSING
   local message=$1
   # FUNCTIONALITY
-  local highlight=" ERROR "
   local color='1'
+  local highlight=" ERROR "
 
-  stdout_log_echo "$highlight" "$message" "$color"
+  stdout_log_echo "$color" "$highlight" "$message"
 }
 
 
@@ -118,9 +118,9 @@ error_log () {
 # Uses global options and log
 stdout_log_echo () {
   # PARSING
-  local highlight=$1
-  local log=$2
-  local color=$3
+  local color=$1
+  local highlight=$2
+  local log=$3
   # FUNCTIONALITY
   if [ -z $QUIET ]; then
     echo -e "$(tput setaf $color)$highlight$(tput sgr 0)$log"
@@ -133,9 +133,9 @@ stdout_log_echo () {
 # Uses global options and log
 stderr_log_echo () {
   # PARSING
-  local highlight=$1
-  local message=$2
-  local color=$3
+  local color=$1
+  local highlight=$2
+  local log=$3
   # FUNCTIONALITY
   echo -e "$(tput setab 1)$(tput setaf 7)$highlight$(tput sgr 0)"\
   "$(tput setaf $3)$message$(tput sgr 0)" >&2
