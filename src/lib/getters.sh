@@ -11,7 +11,7 @@ get_sorted_tree () {
   # PARSING
   local BASE_DIR=$1
   # FUNCTIONALITY
-  find ${BASE_DIR} | sort
+  find ${BASE_DIR} -not -path '*/\.*' | sort
 }
 
 
