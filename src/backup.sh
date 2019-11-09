@@ -49,7 +49,7 @@ backup_if_new () {
   then
     file_log "$source" "$backup"
     if [ -z "$DRY_RUN" ]; then
-      stderr="$(cp "$source" "$backup" 2>&1)"
+      stderr="$(cp -f "$source" "$backup" 2>&1)"
       if [ ! -z "$stderr" ]; then
         warning_log "$stderr"
       fi
