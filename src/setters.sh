@@ -16,6 +16,7 @@ reset_options () {
   LOG='set'
   WIPE=''
   FORCE=''
+  HIDDEN=''
 }
 
 # Uses generic global

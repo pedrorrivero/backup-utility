@@ -15,7 +15,7 @@ do_backup () {
 
   # FUNCTIONALITY
   backup_log $SOURCE_DIR $BACKUP_DIR
-  local source_tree=($(get_sorted_tree ${SOURCE_DIR}))
+  local source_tree=($(get_tree ${SOURCE_DIR}))
   local backup=""
 
   for source in "${source_tree[@]:1}"

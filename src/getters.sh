@@ -7,12 +7,16 @@
 
 ## ---- FUNCTIONS ---- ##
 
-get_sorted_tree () {
+get_tree () {
   # PARSING
   local BASE_DIR=$1
   # FUNCTIONALITY
   IFS=$'\n'
-  find "${BASE_DIR}" -not -path '*/\.*' | sort
+  if [ ! -z $HIDDEN ]; then
+    find "${BASE_DIR}" | sort
+  else
+    find "${BASE_DIR}" -not -path '*/\.*' | sort
+  fi
 }
 
 

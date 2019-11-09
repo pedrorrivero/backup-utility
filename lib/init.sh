@@ -49,6 +49,10 @@ argument_parser () {
       FORCE='set'
       shift
       ;;
+    -i|--include-hidden)
+      HIDDEN='set'
+      shift
+      ;;
     -h|--help)
 
       echo -e "BACKUP UTILITY:"\
@@ -65,6 +69,8 @@ argument_parser () {
       "Wipe clean all previous backups before running."
       echo -e "\t -f  --force: \t "\
       "Do not prompt confirmation dialog."
+      echo -e "\t -i  --include-hidden: \t "\
+      "Backup hidden files as well."
       echo -e "\t -h  --help: \t "\
       "Display this help. "
 
