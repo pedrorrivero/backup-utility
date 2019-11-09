@@ -48,7 +48,7 @@ backup_log () {
   local highlight="\n$(tput rev) BACKING-UP: "
   local log=" $SOURCE_DIR $(tput setaf $color)->$(tput sgr 0) $BACKUP_DIR "
 
-  stdout_log_echo "$color" "$highlight" "$log"
+  backup_log_echo "$color" "$highlight" "$log"
 }
 
 # Uses log
@@ -114,6 +114,19 @@ error_log () {
 
 
 ## ---- LOG ECHOS ---- ##
+
+# Uses global options and log
+backup_log_echo () {
+  # PARSING
+  local color=$1
+  local highlight=$2
+  local log=$3
+  # FUNCTIONALITY
+  echo -e "$(tput setaf $color)$highlight$(tput sgr 0)$log"
+  if [ ! -z "$LOG" ]; then
+    echo -e "$highlight$log" >> $LOG_FILE
+  fi
+}
 
 # Uses global options and log
 stdout_log_echo () {
