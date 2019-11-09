@@ -54,7 +54,7 @@ argument_parser () {
       echo -e "BACKUP UTILITY:"\
       "backup [options] <SOURCE_DIR> <BACKUP_DIR> \n"
       echo -e "\t -q  --quiet: \t "\
-      "Do not log to stdout."
+      "Do not log process to stdout."
       echo -e "\t -d  --dry-run: \t "\
       "Show changes to be made without actually running them."
       echo -e "\t -n  --no-log: \t "\
