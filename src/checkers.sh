@@ -25,7 +25,9 @@ is_set () {
 
 
 is_directory (){
+  # PARSING
   local directory=$1
+  # FUNCTIONALITY
   if [ ! -d "$directory" ]; then
     return 1  #FALSE
   else
@@ -50,11 +52,11 @@ is_in_directory () {
 # Uses global options and checker
 is_in_source_directory () {
   # PARSING
-  local overrider=$1
+  local target=$1
   # FUNCTIONALITY
   local number_of_directories=${#DIRECTORY_PAIRS[@]}
   for (( i = 0; i < $number_of_directories; i+=2 )); do
-    if is_in_directory "$overrider" "${DIRECTORY_PAIRS[$i]}"
+    if is_in_directory "$target" "${DIRECTORY_PAIRS[$i]}"
     then
       return 0  #TRUE
     else

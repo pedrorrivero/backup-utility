@@ -15,11 +15,14 @@ do_backup () {
 
   # FUNCTIONALITY
   backup_log $SOURCE_DIR $BACKUP_DIR
-  local source_tree=($(get_tree ${SOURCE_DIR}))
+  # The next command returns an array with all paths encoded:
+  # '*' -> '\\*' and ' ' -> '\\'
+  local source_tree=($(get_encoded_tree ${SOURCE_DIR}))
   local backup=""
 
   for source in "${source_tree[@]:1}"
   do
+    source=$(get_decoded_path "$source")
     backup=$(get_backup_path "$source" "$SOURCE_DIR" "$BACKUP_DIR")
     if [ -z "$backup" ]; then
       :
