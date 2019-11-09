@@ -6,55 +6,37 @@
 # ---------------------------------------- #
 
 BIN_NAME='prr-backup'
-SRC_NAME='src'
-LIB_NAME='lib'
+DIR_NAME='bin'
 INSTALLATION_LOCATION='/usr/local/bin'
 
 BIN_PATH="${INSTALLATION_LOCATION}/${BIN_NAME}"
-SRC_PATH="${INSTALLATION_LOCATION}/${BIN_NAME}-${SRC_NAME}"
+DIR_PATH="${INSTALLATION_LOCATION}/${BIN_NAME}-${DIR_NAME}"
+
+# AFTER/BEFORE INSTALLATION
+if [ ! -e $DIR_PATH ]; then
+  DIR_PATH='.'
+fi
 
 
 ## ---- PRECONFIGURED BACKUP DIRECTORIES ---- ##
 
 # THIS INIZIALIZATION CAN BE SET FOR AUTOMATED BACKUPS
-if [ -e $SRC_PATH ]; then
-  # AFTER INSTALLATION THIS WILL BE USED
-  DIRECTORY_PAIRS=$(cat "${SRC_PATH}/../preconfig-dirs" 2>/dev/null)
-else
-  # BEFORE INSTALLATION THIS WILL BE USED
-  DIRECTORY_PAIRS=$(cat "./preconfig-dirs" 2>/dev/null)
-fi
+DIRECTORY_PAIRS=$(cat "${DIR_PATH}/preconfig-dirs" 2>/dev/null)
 
 
 ## ---- LIBRARIES ---- ##
 
-if [ -e $SRC_PATH ]; then
-  # AFTER INSTALLATION THIS WILL BE USED
-  source "${SRC_PATH}/backup.sh"
-  source "${SRC_PATH}/end.sh"
-  source "${SRC_PATH}/init.sh"
-  source "${SRC_PATH}/override.sh"
-  source "${SRC_PATH}/wipe.sh"
-  source "${SRC_PATH}/${LIB_NAME}/checkers.sh"
-  source "${SRC_PATH}/${LIB_NAME}/etc.sh"
-  source "${SRC_PATH}/${LIB_NAME}/getters.sh"
-  source "${SRC_PATH}/${LIB_NAME}/loggers.sh"
-  source "${SRC_PATH}/${LIB_NAME}/prompters.sh"
-  source "${SRC_PATH}/${LIB_NAME}/setters.sh"
-else
-  # BEFORE INSTALLATION THIS WILL BE USED
-  source "${SRC_NAME}/backup.sh"
-  source "${SRC_NAME}/end.sh"
-  source "${SRC_NAME}/init.sh"
-  source "${SRC_NAME}/override.sh"
-  source "${SRC_NAME}/wipe.sh"
-  source "${SRC_NAME}/${LIB_NAME}/checkers.sh"
-  source "${SRC_NAME}/${LIB_NAME}/etc.sh"
-  source "${SRC_NAME}/${LIB_NAME}/getters.sh"
-  source "${SRC_NAME}/${LIB_NAME}/loggers.sh"
-  source "${SRC_NAME}/${LIB_NAME}/prompters.sh"
-  source "${SRC_NAME}/${LIB_NAME}/setters.sh"
-fi
+source "${DIR_PATH}/lib/backup.sh"
+source "${DIR_PATH}/lib/end.sh"
+source "${DIR_PATH}/lib/init.sh"
+source "${DIR_PATH}/lib/override.sh"
+source "${DIR_PATH}/lib/wipe.sh"
+source "${DIR_PATH}/src/checkers.sh"
+source "${DIR_PATH}/src/etc.sh"
+source "${DIR_PATH}/src/getters.sh"
+source "${DIR_PATH}/src/loggers.sh"
+source "${DIR_PATH}/src/prompters.sh"
+source "${DIR_PATH}/src/setters.sh"
 
 
 ## ---- MAIN  ---- ##

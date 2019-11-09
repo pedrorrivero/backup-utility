@@ -21,51 +21,55 @@ if [ ! -e "${BIN_NAME}.sh" ]; then
   echo "ERROR: Missing file '${BIN_NAME}.sh'." >&2
   echo "Please run this installation from within its parent directory: './install'." >&2
 
-elif [ ! -e "${SRC_NAME}/backup.sh" ]; then
-  echo "ERROR: Missing file '${SRC_NAME}/backup.sh'." >&2
+elif [ ! -e "./lib/backup.sh" ]; then
+  echo "ERROR: Missing file './lib/backup.sh'." >&2
   echo "Please run this installation from within its parent directory: './install'." >&2
 
-elif [ ! -e "${SRC_NAME}/end.sh" ]; then
-  echo "ERROR: Missing file '${SRC_NAME}/end.sh'." >&2
+elif [ ! -e "./lib/end.sh" ]; then
+  echo "ERROR: Missing file './lib/end.sh'." >&2
   echo "Please run this installation from within its parent directory: './install'." >&2
 
-elif [ ! -e "${SRC_NAME}/init.sh" ]; then
-  echo "ERROR: Missing file '${SRC_NAME}/logs.sh'." >&2
+elif [ ! -e "./lib/init.sh" ]; then
+  echo "ERROR: Missing file './lib/init.sh'." >&2
   echo "Please run this installation from within its parent directory: './install'." >&2
 
-elif [ ! -e "${SRC_NAME}/override.sh" ]; then
-  echo "ERROR: Missing file '${SRC_NAME}/override.sh'." >&2
+elif [ ! -e "./lib/override.sh" ]; then
+  echo "ERROR: Missing file './lib/override.sh'." >&2
   echo "Please run this installation from within its parent directory: './install'." >&2
 
-elif [ ! -e "${SRC_NAME}/${LIB_NAME}/checkers.sh" ]; then
-  echo "ERROR: Missing file '${SRC_NAME}/${LIB_NAME}/checkers.sh'." >&2
+elif [ ! -e "./lib/wipe.sh" ]; then
+  echo "ERROR: Missing file './lib/wipe.sh'." >&2
   echo "Please run this installation from within its parent directory: './install'." >&2
 
-elif [ ! -e "${SRC_NAME}/${LIB_NAME}/etc.sh" ]; then
-  echo "ERROR: Missing file '${SRC_NAME}/${LIB_NAME}/etc.sh'." >&2
+elif [ ! -e "./src/checkers.sh" ]; then
+  echo "ERROR: Missing file './src/checkers.sh'." >&2
   echo "Please run this installation from within its parent directory: './install'." >&2
 
-elif [ ! -e "${SRC_NAME}/${LIB_NAME}/getters.sh" ]; then
-  echo "ERROR: Missing file '${SRC_NAME}/${LIB_NAME}/getters.sh'." >&2
+elif [ ! -e "./src/etc.sh" ]; then
+  echo "ERROR: Missing file './src/etc.sh'." >&2
   echo "Please run this installation from within its parent directory: './install'." >&2
 
-elif [ ! -e "${SRC_NAME}/${LIB_NAME}/loggers.sh" ]; then
-  echo "ERROR: Missing file '${SRC_NAME}/${LIB_NAME}/loggers.sh'." >&2
+elif [ ! -e "./src/getters.sh" ]; then
+  echo "ERROR: Missing file './src/getters.sh'." >&2
   echo "Please run this installation from within its parent directory: './install'." >&2
 
-elif [ ! -e "${SRC_NAME}/${LIB_NAME}/prompters.sh" ]; then
-  echo "ERROR: Missing file '${SRC_NAME}/${LIB_NAME}/prompters.sh'." >&2
+elif [ ! -e "./src/loggers.sh" ]; then
+  echo "ERROR: Missing file './src/loggers.sh'." >&2
   echo "Please run this installation from within its parent directory: './install'." >&2
 
-elif [ ! -e "${SRC_NAME}/${LIB_NAME}/setters.sh" ]; then
-  echo "ERROR: Missing file '${SRC_NAME}/${LIB_NAME}/setters.sh'." >&2
+elif [ ! -e "./src/prompters.sh" ]; then
+  echo "ERROR: Missing file './src/prompters.sh'." >&2
+  echo "Please run this installation from within its parent directory: './install'." >&2
+
+elif [ ! -e "./src/setters.sh" ]; then
+  echo "ERROR: Missing file './src/setters.sh'." >&2
   echo "Please run this installation from within its parent directory: './install'." >&2
 
 else
 
   chmod 766 "${BIN_NAME}.sh"
 
-  ln -s "${PWD}/${SRC_NAME}" ${SRC_PATH}
+  ln -s "${PWD}" ${DIR_PATH}
   ln -s "${PWD}/${BIN_NAME}.sh" ${BIN_PATH}
 
   echo "Succesful installation of ${BIN_NAME}!"

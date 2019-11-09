@@ -7,9 +7,9 @@
 
 ## ---- LOG FILES ---- ##
 
-if [ -e '/usr/local/bin/prr-backup-src' ]; then
+if [ -e '/usr/local/bin/prr-backup-bin' ]; then
   # AFTER INSTALLATION THIS WILL BE USED
-  LOG_PATH='/usr/local/bin/prr-backup-src/..'
+  LOG_PATH='/usr/local/bin/prr-backup-bin/'
 else
   # BEFORE INSTALLATION THIS WILL BE USED
   LOG_PATH='.'
