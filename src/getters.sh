@@ -9,10 +9,10 @@
 
 get_encoded_tree () {
   # PARSING
-  local BASE_DIR=$1
+  local BASE_DIR="$1"
   # FUNCTIONALITY
   IFS=$'\n'
-  if [ ! -z $HIDDEN ]; then
+  if [ ! -z "$HIDDEN" ]; then
     local tree=$(find "${BASE_DIR}")
   else
     local tree=$(find "${BASE_DIR}" -not -path '*/\.*')
@@ -29,6 +29,7 @@ get_encoded_tree () {
   done
   IFS=' '
   echo "$encoded_tree" | sort
+  IFS=$'\n'
 }
 
 
@@ -39,25 +40,25 @@ get_array_size () {
 
 
 get_realpath() {
-  local path=$(echo $1 | awk '{ gsub("/*$",""); print }')
+  local path="$(echo "$1" | awk '{ gsub("/*$",""); print }')"
   [[ "$path" = /* ]] && echo "$path" || echo "$PWD/${path#./}"
 }
 
 
 get_relative_path () {
   # PARSING
-  local path=$1
-  local BASE_DIR=$2
+  local path="$1"
+  local BASE_DIR="$2"
   # FUNCTIONALITY
-  echo ${path} | awk '{ gsub("^'"${BASE_DIR}"'",""); gsub("^\/*",""); print }'
+  echo "${path}" | awk '{ gsub("^'"${BASE_DIR}"'",""); gsub("^\/*",""); print }'
 }
 
 # Uses checker and getter
 get_backup_path () {
   # PARSING
-  local source=$1
-  local SOURCE_DIR=$2
-  local BACKUP_DIR=$3
+  local source="$1"
+  local SOURCE_DIR="$2"
+  local BACKUP_DIR="$3"
   # FUNCTIONALITY
   if is_in_directory "$source" "$SOURCE_DIR"; then
     echo "${BACKUP_DIR}/$(get_relative_path "$source" "$SOURCE_DIR")"

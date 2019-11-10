@@ -10,7 +10,7 @@
 # Uses global options and prompter
 ask_confirmation () {
   # PARSING
-  local message=$1
+  local message="$1"
   # FUNCTIONALITY
   local confirmation=''
   if [ -z "$FORCE" ]
@@ -25,7 +25,7 @@ ask_confirmation () {
 # Uses etc
 confirm_answer () {
   # PARSING
-  local confirmation=$1
+  local confirmation="$1"
   # FUNCTIONALITY
   if [[ "$confirmation" == 'n' ]] || [[ "$confirmation" == 'N' ]]
   then

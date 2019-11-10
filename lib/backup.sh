@@ -35,8 +35,8 @@ do_backup () {
 # Uses global options, checkers, getters and loggers
 backup_if_new () {
   # PARSING
-  local source=$1
-  local backup=$2
+  local source="$1"
+  local backup="$2"
   # FUNCTIONALITY
   local stderr=''
   if is_new_subdirectory "$source" "$backup"

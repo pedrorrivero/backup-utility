@@ -10,8 +10,8 @@
 # Uses global options, getters, loggers and overrride
 override_requested_subdirecrories () {
   # PARSING
-  local SOURCE_DIR=$1
-  local BACKUP_DIR=$2
+  local SOURCE_DIR="$1"
+  local BACKUP_DIR="$2"
   # FUNCTIONALITY
   local target=''
   for subdirectory in "${OVERRIDE[@]}"
@@ -32,7 +32,7 @@ override_requested_subdirecrories () {
 # Uses global options and prompter
 override_if_wet () {
   # PARSING
-  local target=$1
+  local target="$1"
   # FUNCTIONALITY
   if [ -z "$DRY_RUN" ]
   then

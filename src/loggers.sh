@@ -9,7 +9,7 @@
 
 if [ -e '/usr/local/bin/prr-backup-bin' ]; then
   # AFTER INSTALLATION THIS WILL BE USED
-  LOG_PATH='/usr/local/bin/prr-backup-bin/'
+  LOG_PATH='/usr/local/bin/prr-backup-bin'
 else
   # BEFORE INSTALLATION THIS WILL BE USED
   LOG_PATH='.'
@@ -27,7 +27,7 @@ LOG_FILE="$LOG_DIRECTORY/$LOG_FILENAME"
 # Uses log
 new_subdirectory_log () {
   # PARSING
-  local subdirectory=$1
+  local subdirectory="$1"
 
   # FUNCTIONALITY
   local color='3'
@@ -40,8 +40,8 @@ new_subdirectory_log () {
 # Uses log
 backup_log () {
   # PARSING
-  local SOURCE_DIR=$1
-  local BACKUP_DIR=$2
+  local SOURCE_DIR="$1"
+  local BACKUP_DIR="$2"
 
   # FUNCTIONALITY
   local color='6'
@@ -54,8 +54,8 @@ backup_log () {
 # Uses log
 file_log () {
   # PARSING
-  local source=$1
-  local backup=$2
+  local source="$1"
+  local backup="$2"
 
   # FUNCTIONALITY
   local color='2'
@@ -68,7 +68,7 @@ file_log () {
 # Uses log
 override_log () {
   # PARSING
-  local backup=$1
+  local backup="$1"
 
   # FUNCTIONALITY
   local color='6'
@@ -81,7 +81,7 @@ override_log () {
 # Uses log
 wipe_log () {
   # PARSING
-  local BACKUP_DIR=$1
+  local BACKUP_DIR="$1"
   # FUNCTIONALITY
   local color='6'
   local highlight="\n WIPING OUT BACKUP: "
@@ -93,7 +93,7 @@ wipe_log () {
 # Uses log
 warning_log () {
   # PARSING
-  local message=$1
+  local message="$1"
   # FUNCTIONALITY
   local color='3'
   local highlight=" WARNING "
@@ -104,7 +104,7 @@ warning_log () {
 # Uses log
 error_log () {
   # PARSING
-  local message=$1
+  local message="$1"
   # FUNCTIONALITY
   local color='1'
   local highlight=" ERROR "
@@ -118,9 +118,9 @@ error_log () {
 # Uses global options and log
 backup_log_echo () {
   # PARSING
-  local color=$1
-  local highlight=$2
-  local log=$3
+  local color="$1"
+  local highlight="$2"
+  local log="$3"
   # FUNCTIONALITY
   echo -e "$(tput setaf $color)$highlight$(tput sgr 0)$log"
   if [ ! -z "$LOG" ]; then
@@ -131,9 +131,9 @@ backup_log_echo () {
 # Uses global options and log
 stdout_log_echo () {
   # PARSING
-  local color=$1
-  local highlight=$2
-  local log=$3
+  local color="$1"
+  local highlight="$2"
+  local log="$3"
   # FUNCTIONALITY
   if [ -z "$QUIET" ]; then
     echo -e "$(tput setaf $color)$highlight$(tput sgr 0)$log"
@@ -146,9 +146,9 @@ stdout_log_echo () {
 # Uses global options and log
 stderr_log_echo () {
   # PARSING
-  local color=$1
-  local highlight=$2
-  local log=$3
+  local color="$1"
+  local highlight="$2"
+  local log="$3"
   # FUNCTIONALITY
   echo -e "$(tput setab 1)$(tput setaf 7)$highlight$(tput sgr 0)"\
   "$(tput setaf $color)$message$(tput sgr 0)" >&2

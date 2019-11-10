@@ -10,7 +10,7 @@
 # Uses global options, loggers and prompters
 wipe_backup_if_requested () {
   # PARSING
-  local target=$1
+  local target="$1"
   # FUNCTIONALITY
   if [ ! -z "$WIPE" ] && [ -z "$DRY_RUN" ] && [ ! -z "$target" ]
   then

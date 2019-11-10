@@ -10,11 +10,11 @@
 # Uses init and setters
 init_backup_mode () {
   # PARSING
-  local ARGS=$@
+  local ARGS="$@"
   # FUNCTIONALITY
   tabs 4
   reset_options
-  argument_parser $ARGS
+  argument_parser "$ARGS"
   create_log_file
 }
 
@@ -111,10 +111,10 @@ create_log_file () {
 # Uses global options, getters and setters
 standardize_global_dir_array () {
   # PARSING
-  local global_name=$1
+  local global_name="$1"
   # FUNCTIONALITY
   set_global_to_array "$global_name"
-  local global_size=$(eval echo '${#'$global_name'[@]}')
+  local global_size="$(eval echo '${#'$global_name'[@]}')"
   for (( i=0; i<$global_size; i++ )); do
     eval $global_name'['$i']=$(get_realpath ${'$global_name'['$i']})'
   done
@@ -122,8 +122,8 @@ standardize_global_dir_array () {
 
 # Uses global options, checkers, etc and loggers
 verify_directories () {
-  local number_of_directories=${#DIRECTORY_PAIRS[@]}
-  if ! is_even $number_of_directories; then
+  local number_of_directories="${#DIRECTORY_PAIRS[@]}"
+  if ! is_even "$number_of_directories"; then
     error_log "Not a backup location for each source directory."
     custom_exit 1
   fi

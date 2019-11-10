@@ -9,5 +9,5 @@
 
 custom_exit () {
   echo -en "\n"
-  exit $@
+  exit "$@"
 }

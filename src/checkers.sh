@@ -8,7 +8,7 @@
 ## ---- FUNCTIONS ---- ##
 
 is_even (){
-  local number_of_directories=$1
+  local number_of_directories="$1"
   if (( $number_of_directories % 2 != 0 ))
   then
     return 1  #FALSE
@@ -26,7 +26,7 @@ is_set () {
 
 is_directory (){
   # PARSING
-  local directory=$1
+  local directory="$1"
   # FUNCTIONALITY
   if [ ! -d "$directory" ]; then
     return 1  #FALSE
@@ -38,8 +38,8 @@ is_directory (){
 
 is_in_directory () {
   # PARSING
-  local target=$1
-  local TARGET_DIR=$2
+  local target="$1"
+  local TARGET_DIR="$2"
   # FUNCTIONALITY
   if [ -e "$target" ] && [[ "$target" == "${TARGET_DIR}/"* ]]
   then
@@ -52,7 +52,7 @@ is_in_directory () {
 # Uses global options and checker
 is_in_source_directory () {
   # PARSING
-  local target=$1
+  local target="$1"
   # FUNCTIONALITY
   local number_of_directories=${#DIRECTORY_PAIRS[@]}
   for (( i = 0; i < $number_of_directories; i+=2 )); do
@@ -69,8 +69,8 @@ is_in_source_directory () {
 # Uses log and etc
 is_new_file () {
   # PARSING
-  local source=$1
-  local backup=$2
+  local source="$1"
+  local backup="$2"
   # FUNCTIONALITY
   if [ ! -d "$source" ] && [ -d "$backup" ]; then
     error_log "CONFLICT: non-directory \"$source\" -> directory \"$backup\"."
@@ -85,8 +85,8 @@ is_new_file () {
 # Uses log and etc
 is_new_subdirectory () {
   # PARSING
-  local source=$1
-  local backup=$2
+  local source="$1"
+  local backup="$2"
   # FUNCTIONALITY
   if [ -d "$source" ] && [ ! -e "$backup" ]; then
     return 0  #TRUE
