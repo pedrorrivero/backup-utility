@@ -16,6 +16,7 @@ init_backup_mode () {
   reset_options
   argument_parser "$ARGS"
   create_log_file
+  echo_backup_briefing
 }
 
 # Uses global options, etc and init
@@ -55,10 +56,10 @@ argument_parser () {
       ;;
     -h|--help)
 
-      echo -e "BACKUP UTILITY:"\
+      echo -e "\nBACKUP UTILITY:"\
       "backup [options] <SOURCE_DIR> <BACKUP_DIR> \n"
       echo -e "\t -q  --quiet: \t "\
-      "Do not log process to stdout."
+      "Do not log individual file/dir backups to stdout."
       echo -e "\t -d  --dry-run: \t "\
       "Show changes to be made without actually running them."
       echo -e "\t -n  --no-log: \t "\
@@ -106,6 +107,16 @@ create_log_file () {
     mkdir "$LOG_DIRECTORY" 2> /dev/null
     touch "$LOG_FILE" 2> /dev/null
   fi
+}
+
+echo_backup_briefing () {
+  echo -e "\n$(tput setab 4)BACKUP BRIEFING$(tput sgr 0)"
+  IFS=$'\n'
+  local number_of_directories="${#DIRECTORY_PAIRS[@]}"
+  for (( i = 0; i < $number_of_directories; i+=2 )); do
+    echo "    ${DIRECTORY_PAIRS[$i]} $(tput setaf 4)->$(tput sgr 0) ${DIRECTORY_PAIRS[$i+1]}"
+  done
+  echo -en "\n"
 }
 
 # Uses global options, getters and setters

@@ -11,7 +11,7 @@
 end_backup_mode () {
   if [ ! -z "$LOG" ]
   then
-    echo -e "\n$(tput setab 0)$(tput setaf 7) Logs saved to: $(tput sgr 0) $LOG_FILE \n"
+    echo -e "\n\n$(tput setab 0)$(tput setaf 7) Logs saved to: $(tput sgr 0) $LOG_FILE \n"
   else
     echo -en "\n"
   fi
