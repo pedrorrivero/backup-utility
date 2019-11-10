@@ -26,6 +26,7 @@ override_requested_subdirecrories () {
       warning_log "NOTHING TO OVERRIDE: \"$target\" does not exist."
     fi
   done
+  echo -en "\n"
 }
 
 

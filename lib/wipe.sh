@@ -16,7 +16,8 @@ wipe_backup_if_requested () {
   then
     wipe_log "$target"
     ask_confirmation "Confirm wipe backup \"$target\""
-    rm -rf "$target/"*
-    rm -rf "$target/."*
+    rm -rf "$target/"* 2> /dev/null
+    rm -rf "$target/."* 2> /dev/null
+    echo -en "\n"
   fi
 }
