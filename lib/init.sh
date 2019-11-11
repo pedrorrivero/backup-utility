@@ -9,18 +9,25 @@
 
 # Uses init and setters
 init_backup_mode () {
-  # PARSING
-  local ARGS="$@"
   # FUNCTIONALITY
   tabs 4
   reset_options
-  argument_parser "$ARGS"
+  argument_parser $@
   create_log_file
   echo_backup_briefing
 }
 
 # Uses global options, etc and init
 argument_parser () {
+
+  ## ---- PRECONFIGURED BACKUP DIRECTORIES ---- ##
+
+  # THIS INIZIALIZATION CAN BE SET FOR AUTOMATED BACKUPS
+  DIRECTORY_PAIRS="$(cat "${DIR_PATH}/preconfig-dirs" 2>/dev/null)"
+
+  if [ -z "$DIRECTORY_PAIRS" ]; then
+    unset DIRECTORY_PAIRS
+  fi
 
   while (( "$#" )); do
   case "$1" in
@@ -39,7 +46,7 @@ argument_parser () {
       shift
       ;;
     -o|--override)
-      OVERRIDE="$OVERRIDE $2"
+      OVERRIDE="$OVERRIDE"$'\n'"$2"
       shift 2
       ;;
     -w|--wipe-backup)
@@ -57,7 +64,7 @@ argument_parser () {
     -h|--help)
 
       echo -e "\nBACKUP UTILITY:"\
-      "backup [options] <SOURCE_DIR> <BACKUP_DIR> \n"
+      "backup [options] [<SOURCE_DIR> <BACKUP_DIR>]* \n"
       echo -e "\t -q  --quiet: \t "\
       "Do not log individual file/dir backups to stdout."
       echo -e "\t -d  --dry-run: \t "\
@@ -86,7 +93,7 @@ argument_parser () {
       custom_exit 1
       ;;
     *) # preserve positional arguments
-      DIRECTORY_PAIRS="$DIRECTORY_PAIRS $1"
+      DIRECTORY_PAIRS="${DIRECTORY_PAIRS}"$'\n'"$1"
       shift
       ;;
   esac
@@ -116,7 +123,7 @@ echo_backup_briefing () {
   for (( i = 0; i < $number_of_directories; i+=2 )); do
     echo "    ${DIRECTORY_PAIRS[$i]} $(tput setaf 4)->$(tput sgr 0) ${DIRECTORY_PAIRS[$i+1]}"
   done
-  echo -en "\n"
+  unset IFS
 }
 
 # Uses global options, getters and setters
@@ -127,7 +134,7 @@ standardize_global_dir_array () {
   set_global_to_array "$global_name"
   local global_size="$(eval echo '${#'$global_name'[@]}')"
   for (( i=0; i<$global_size; i++ )); do
-    eval $global_name'['$i']=$(get_realpath ${'$global_name'['$i']})'
+    eval $global_name'['$i']="$(get_realpath "${'$global_name'['$i']}")"'
   done
 }
 

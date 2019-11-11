@@ -18,12 +18,6 @@ if [ ! -e $DIR_PATH ]; then
 fi
 
 
-## ---- PRECONFIGURED BACKUP DIRECTORIES ---- ##
-
-# THIS INIZIALIZATION CAN BE SET FOR AUTOMATED BACKUPS
-DIRECTORY_PAIRS=$(cat "${DIR_PATH}/preconfig-dirs" 2>/dev/null)
-
-
 ## ---- LIBRARIES ---- ##
 
 source "${DIR_PATH}/lib/backup.sh"
@@ -43,15 +37,14 @@ source "${DIR_PATH}/src/setters.sh"
 
 backup () {
 
-  local ARGS=$@
-
-  init_backup_mode $ARGS
+  # There are issues when inputing a pth with spaces
+  init_backup_mode $@
 
   for (( i=0; i<${#DIRECTORY_PAIRS[@]}; i+=2 ));
   do
 
-    local SOURCE_DIR=${DIRECTORY_PAIRS[$i]}
-    local BACKUP_DIR=${DIRECTORY_PAIRS[$i+1]}
+    local SOURCE_DIR="${DIRECTORY_PAIRS[$i]}"
+    local BACKUP_DIR="${DIRECTORY_PAIRS[$i+1]}"
 
     override_requested_subdirecrories "$SOURCE_DIR" "$BACKUP_DIR"
     wipe_backup_if_requested "$BACKUP_DIR"

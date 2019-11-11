@@ -9,7 +9,7 @@
 
 # Uses global options
 reset_options () {
-  OVERRIDE=""
+  unset OVERRIDE
 
   QUIET=''
   DRY_RUN=''
@@ -24,7 +24,11 @@ set_global_to_array () {
   # PARSING
   local global_name="$1"
   # FUNCTIONALITY
-  local OLD_IFS="$IFS"
-  IFS=' ' read -ra "$global_name" <<< "$(eval echo '${'$global_name'[@]}')"
-  IFS="$OLD_IFS"
+  IFS=$'\n'
+  local i=0
+  for line in $(eval echo '"${'$global_name'}"'); do
+    eval $global_name'['$i']'='"'$line'"'
+    ((i++))
+  done
+  unset IFS
 }

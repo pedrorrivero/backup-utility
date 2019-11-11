@@ -7,29 +7,16 @@
 
 ## ---- FUNCTIONS ---- ##
 
-get_encoded_tree () {
+get_sorted_tree () {
   # PARSING
   local BASE_DIR="$1"
   # FUNCTIONALITY
-  IFS=$'\n'
   if [ ! -z "$HIDDEN" ]; then
     local tree=$(find "${BASE_DIR}")
   else
     local tree=$(find "${BASE_DIR}" -not -path '*/\.*')
   fi
-  # '*' gets substituted by '\\*'
-  # ' ' gets substituted by '\\'
-
-  # echo "$tree"
-
-  local encoded_tree=''
-  for source in "${tree[@]}"; do
-    encoded_tree+=$(get_encoded_path "$source")
-    encoded_tree+=' '
-  done
-  IFS=' '
-  echo "$encoded_tree" | sort
-  IFS=$'\n'
+  echo "$tree"
 }
 
 
@@ -48,7 +35,7 @@ get_realpath() {
 get_relative_path () {
   # PARSING
   local path="$1"
-  local BASE_DIR="$2"
+  local BASE_DIR="$(get_escaped_string "$2")"
   # FUNCTIONALITY
   echo "${path}" | awk '{ gsub("^'"${BASE_DIR}"'",""); gsub("^\/*",""); print }'
 }
@@ -67,27 +54,14 @@ get_backup_path () {
   fi
 }
 
-get_encoded_path () {
+get_escaped_string () {
   # PARSING
-  local path=''
+  local string=''
   if [ -z "$1" ]; then
-    read path
+    read string
   else
-    path="$@"
+    string="$@"
   fi
   # FUNCTIONALITY
-
-  echo "$path" | awk '{ gsub(" ","\\\\"); gsub("\\*","\\\\*"); print }'
-}
-
-get_decoded_path () {
-  # PARSING
-  local path=''
-  if [ -z "$1" ]; then
-    read path
-  else
-    path="$@"
-  fi
-  # FUNCTIONALITY
-  echo "$path" | awk '{ gsub("\\\\\\\\\\*","*"); gsub("\\\\\\\\"," "); print }'
+  echo "$string" | awk '{ gsub("[*?+{}|()]","\\\\\\\\&"); print }'
 }
