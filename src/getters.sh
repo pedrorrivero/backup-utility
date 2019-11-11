@@ -12,9 +12,9 @@ get_sorted_tree () {
   local BASE_DIR="$1"
   # FUNCTIONALITY
   if [ ! -z "$HIDDEN" ]; then
-    local tree=$(find "${BASE_DIR}")
+    local tree=$(find "${BASE_DIR}" | sort)
   else
-    local tree=$(find "${BASE_DIR}" -not -path '*/\.*')
+    local tree=$(find "${BASE_DIR}" -not -path '*/\.*' | sort)
   fi
   echo "$tree"
 }
