@@ -123,8 +123,7 @@ verify_overrides
 # DEPENDENCIES: GLOBAL
 
 create_log_file () {
-  if [ ! -z "$LOG" ]
-  then
+  if [ ! -z "$LOG" ]; then
     mkdir "$LOG_DIRECTORY" 2> /dev/null
     touch "$LOG_FILE" 2> /dev/null
   fi
@@ -132,7 +131,7 @@ create_log_file () {
 
 
 ## ---- ECHO BACKUP BRIEFING ---- ##
-# DEPENDENCIES: 
+# DEPENDENCIES:
 
 echo_backup_briefing () {
   echo -e "\n$(tput setab 4)BACKUP BRIEFING$(tput sgr 0)"
@@ -184,8 +183,7 @@ verify_directories () {
 verify_overrides () {
   local number_of_overrides=${#OVERRIDE[@]}
   for (( i = 0; i < $number_of_overrides; i++ )); do
-    if ! is_in_source_directory "${OVERRIDE[$i]}"
-    then
+    if ! is_in_source_directory "${OVERRIDE[$i]}"; then
       warning_log "OVERRIDE FAILED: \"${OVERRIDE[$i]}\" is not in any source."
     fi
   done

@@ -17,8 +17,7 @@
 
 is_even (){
   local number_of_directories="$1"
-  if (( $number_of_directories % 2 != 0 ))
-  then
+  if (( $number_of_directories % 2 != 0 )); then
     return 1  #FALSE
   else
     return 0  #TRUE
@@ -58,8 +57,7 @@ is_in_directory () {
   local target="$1"
   local TARGET_DIR="$2"
   # FUNCTIONALITY
-  if [ -e "$target" ] && [[ "$target" == "${TARGET_DIR}/"* ]]
-  then
+  if [ -e "$target" ] && [[ "$target" == "${TARGET_DIR}/"* ]]; then
     return 0  #TRUE
   else
     return 1  #FALSE
@@ -75,8 +73,7 @@ is_in_source_directory () {
   # FUNCTIONALITY
   local number_of_directories=${#DIRECTORY_PAIRS[@]}
   for (( i = 0; i < $number_of_directories; i+=2 )); do
-    if is_in_directory "$target" "${DIRECTORY_PAIRS[$i]}"
-    then
+    if is_in_directory "$target" "${DIRECTORY_PAIRS[$i]}"; then
       return 0  #TRUE
     else
       :

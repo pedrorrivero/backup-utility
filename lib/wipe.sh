@@ -19,8 +19,7 @@ wipe_backup_if_requested () {
   # PARSING
   local target="$1"
   # FUNCTIONALITY
-  if [ ! -z "$WIPE" ] && [ -z "$DRY_RUN" ] && [ ! -z "$target" ]
-  then
+  if [ ! -z "$WIPE" ] && [ -z "$DRY_RUN" ] && [ ! -z "$target" ]; then
     wipe_log "$target"
     ask_confirmation "Confirm wipe backup \"$target\""
     rm -rf "$target/"* 2> /dev/null

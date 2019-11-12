@@ -48,11 +48,10 @@ source "${DIR_PATH}/src/setters.sh"
 
 prr-backup () {
 
-  # There are issues when inputing a pth with spaces
+  # There are issues when inputing a path with spaces
   init_backup_mode $@
 
-  for (( i=0; i<${#DIRECTORY_PAIRS[@]}; i+=2 ));
-  do
+  for (( i=0; i<${#DIRECTORY_PAIRS[@]}; i+=2 )); do
 
     local SOURCE_DIR="${DIRECTORY_PAIRS[$i]}"
     local BACKUP_DIR="${DIRECTORY_PAIRS[$i+1]}"
@@ -61,6 +60,7 @@ prr-backup () {
     wipe_backup_if_requested "$BACKUP_DIR"
 
     do_backup "$SOURCE_DIR" "$BACKUP_DIR"
+
   done
 
   end_backup_mode

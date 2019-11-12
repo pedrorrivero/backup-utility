@@ -21,8 +21,7 @@ override_requested_subdirecrories () {
   local BACKUP_DIR="$2"
   # FUNCTIONALITY
   local target=''
-  for subdirectory in "${OVERRIDE[@]}"
-  do
+  for subdirectory in "${OVERRIDE[@]}"; do
     target=$(get_backup_path "$subdirectory" "$SOURCE_DIR" "$BACKUP_DIR")
     if [ -z "$target" ]; then
       :
@@ -44,8 +43,7 @@ override_if_wet () {
   # PARSING
   local target="$1"
   # FUNCTIONALITY
-  if [ -z "$DRY_RUN" ]
-  then
+  if [ -z "$DRY_RUN" ]; then
     ask_confirmation "Confirm override subdirectory \"$target\""
     rm -rf "$target"
   fi
