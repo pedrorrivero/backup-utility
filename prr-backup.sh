@@ -1,8 +1,15 @@
 #!/usr/local/bin/bash
 
+#    _____  _____
+#   |  __ \|  __ \    AUTHOR: Pedro Rivero
+#   | |__) | |__) |   ---------------------------------
+#   |  ___/|  _  /    DATE: November 12, 2019
+#   | |    | | \ \    ---------------------------------
+#   |_|    |_|  \_\   https://github.com/pedrorrivero
+#
+
 # ---------------------------------------- #
-# Programer: PEDRO RIVERO
-# Date: Nov 4 2019
+#            NAMING AND SET-UP             #
 # ---------------------------------------- #
 
 BIN_NAME='prr-backup'
@@ -18,7 +25,9 @@ if [ ! -e $DIR_PATH ]; then
 fi
 
 
-## ---- LIBRARIES ---- ##
+# ---------------------------------------- #
+#                LIBRARIES                 #
+# ---------------------------------------- #
 
 source "${DIR_PATH}/lib/backup.sh"
 source "${DIR_PATH}/lib/end.sh"
@@ -33,9 +42,11 @@ source "${DIR_PATH}/src/prompters.sh"
 source "${DIR_PATH}/src/setters.sh"
 
 
-## ---- MAIN  ---- ##
+# ---------------------------------------- #
+#                   MAIN                   #
+# ---------------------------------------- #
 
-backup () {
+prr-backup () {
 
   # There are issues when inputing a pth with spaces
   init_backup_mode $@
@@ -57,7 +68,9 @@ backup () {
 }
 
 
-## ---- EXECUTION ---- ##
+# ---------------------------------------- #
+#                EXECUTION                 #
+# ---------------------------------------- #
 
-# This formulation is not necessary but good for debugging
-backup $@
+# This format is not necessary but good for debugging
+prr-backup $@

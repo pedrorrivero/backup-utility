@@ -1,11 +1,19 @@
 #!/usr/local/bin/bash
 
+#    _____  _____
+#   |  __ \|  __ \    AUTHOR: Pedro Rivero
+#   | |__) | |__) |   ---------------------------------
+#   |  ___/|  _  /    DATE: November 12, 2019
+#   | |    | | \ \    ---------------------------------
+#   |_|    |_|  \_\   https://github.com/pedrorrivero
+#
+
 # ---------------------------------------- #
-# Programer: PEDRO RIVERO
-# Date: Nov 4 2019
+#                FUNCTIONS                 #
 # ---------------------------------------- #
 
-## ---- FUNCTIONS ---- ##
+## ---- IS EVEN ---- ##
+# DEPENDENCIES:
 
 is_even (){
   local number_of_directories="$1"
@@ -18,11 +26,17 @@ is_even (){
 }
 
 
+## ---- IS SET ---- ##
+# DEPENDENCIES:
+
 is_set () {
   #TODO
   :
 }
 
+
+## ---- IS DIRECTORY ---- ##
+# DEPENDENCIES:
 
 is_directory (){
   # PARSING
@@ -35,6 +49,9 @@ is_directory (){
   fi
 }
 
+
+## ---- IS IN DIRECTORY ---- ##
+# DEPENDENCIES:
 
 is_in_directory () {
   # PARSING
@@ -49,7 +66,9 @@ is_in_directory () {
   fi
 }
 
-# Uses global options and checker
+## ---- IS IN SOURCE DIRECTORY ---- ##
+# DEPENDENCIES: GLOBAL, checkers
+
 is_in_source_directory () {
   # PARSING
   local target="$1"
@@ -66,7 +85,9 @@ is_in_source_directory () {
   return 1  #FALSE
 }
 
-# Uses log and etc
+## ---- IS NEW FILE ---- ##
+# DEPENDENCIES: etc, loggers
+
 is_new_file () {
   # PARSING
   local source="$1"
@@ -82,7 +103,9 @@ is_new_file () {
   fi
 }
 
-# Uses log and etc
+## ---- IS NEW SUBDIRECTORY ---- ##
+# DEPENDENCIES: etc, loggers
+
 is_new_subdirectory () {
   # PARSING
   local source="$1"

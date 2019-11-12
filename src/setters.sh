@@ -1,13 +1,20 @@
 #!/usr/local/bin/bash
 
+#    _____  _____
+#   |  __ \|  __ \    AUTHOR: Pedro Rivero
+#   | |__) | |__) |   ---------------------------------
+#   |  ___/|  _  /    DATE: November 12, 2019
+#   | |    | | \ \    ---------------------------------
+#   |_|    |_|  \_\   https://github.com/pedrorrivero
+#
+
 # ---------------------------------------- #
-# Programer: PEDRO RIVERO
-# Date: Nov 4 2019
+#                FUNCTIONS                 #
 # ---------------------------------------- #
 
-## ---- FUNCTIONS ---- ##
+## ---- RESET OPTIONS ---- ##
+# DEPENDENCIES: GLOBAL
 
-# Uses global options
 reset_options () {
   unset OVERRIDE
 
@@ -19,7 +26,10 @@ reset_options () {
   HIDDEN=''
 }
 
-# Uses generic global
+
+## ---- SET GLOBAL TO ARRAY ---- ##
+# DEPENDENCIES: GLOBAL
+
 set_global_to_array () {
   # PARSING
   local global_name="$1"

@@ -1,13 +1,20 @@
 #!/usr/local/bin/bash
 
+#    _____  _____
+#   |  __ \|  __ \    AUTHOR: Pedro Rivero
+#   | |__) | |__) |   ---------------------------------
+#   |  ___/|  _  /    DATE: November 12, 2019
+#   | |    | | \ \    ---------------------------------
+#   |_|    |_|  \_\   https://github.com/pedrorrivero
+#
+
 # ---------------------------------------- #
-# Programer: PEDRO RIVERO
-# Date: Nov 4 2019
+#                  MODULE                  #
 # ---------------------------------------- #
 
-## ---- FUNCTIONS ---- ##
+## ---- INIT BACKUP MODE ---- ##
+# DEPENDENCIES: setters, Init
 
-# Uses init and setters
 init_backup_mode () {
   # FUNCTIONALITY
   tabs 4
@@ -17,12 +24,14 @@ init_backup_mode () {
   echo_backup_briefing
 }
 
-# Uses global options, etc and init
+
+## ---- ARGUMENT PARSER ---- ##
+# DEPENDENCIES: GLOBAL, etc, Init
+
 argument_parser () {
 
-  ## ---- PRECONFIGURED BACKUP DIRECTORIES ---- ##
-
-  # THIS INIZIALIZATION CAN BE SET FOR AUTOMATED BACKUPS
+  # PRECONFIGURED BACKUP DIRECTORIES
+  # This inizialization can be set for automated backups
   DIRECTORY_PAIRS="$(cat "${DIR_PATH}/preconfig-dirs" 2>/dev/null)"
 
   if [ -z "$DIRECTORY_PAIRS" ]; then
@@ -99,15 +108,20 @@ argument_parser () {
   esac
 done
 
+# STANDARDIZATION
 standardize_global_dir_array "OVERRIDE"
 standardize_global_dir_array "DIRECTORY_PAIRS"
 
+# VERIFICATION
 verify_directories
 verify_overrides
 
 }
 
-# Uses global options and log
+
+## ---- CREATE LOG FILE ---- ##
+# DEPENDENCIES: GLOBAL
+
 create_log_file () {
   if [ ! -z "$LOG" ]
   then
@@ -115,6 +129,10 @@ create_log_file () {
     touch "$LOG_FILE" 2> /dev/null
   fi
 }
+
+
+## ---- ECHO BACKUP BRIEFING ---- ##
+# DEPENDENCIES: 
 
 echo_backup_briefing () {
   echo -e "\n$(tput setab 4)BACKUP BRIEFING$(tput sgr 0)"
@@ -126,7 +144,10 @@ echo_backup_briefing () {
   unset IFS
 }
 
-# Uses global options, getters and setters
+
+## ---- STANDARDIZE GLOBAL DIR ARRAY ---- ##
+# DEPENDENCIES: GLOBAL, getters, setters
+
 standardize_global_dir_array () {
   # PARSING
   local global_name="$1"
@@ -138,7 +159,10 @@ standardize_global_dir_array () {
   done
 }
 
-# Uses global options, checkers, etc and loggers
+
+## ---- VERIFY DIRECTORIES ---- ##
+# DEPENDENCIES: GLOBAL, checkers, etc, loggers
+
 verify_directories () {
   local number_of_directories="${#DIRECTORY_PAIRS[@]}"
   if ! is_even "$number_of_directories"; then
@@ -153,7 +177,10 @@ verify_directories () {
   done
 }
 
-# Uses global options, checkers and loggers
+
+## ---- VERIFY OVERRIDES ---- ##
+# DEPENDENCIES: GLOBAL, checkers, loggers
+
 verify_overrides () {
   local number_of_overrides=${#OVERRIDE[@]}
   for (( i = 0; i < $number_of_overrides; i++ )); do

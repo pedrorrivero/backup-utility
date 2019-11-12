@@ -1,11 +1,16 @@
 #!/usr/local/bin/bash
 
-# ---------------------------------------- #
-# Programer: PEDRO RIVERO
-# Date: Nov 4 2019
-# ---------------------------------------- #
+#    _____  _____
+#   |  __ \|  __ \    AUTHOR: Pedro Rivero
+#   | |__) | |__) |   ---------------------------------
+#   |  ___/|  _  /    DATE: November 12, 2019
+#   | |    | | \ \    ---------------------------------
+#   |_|    |_|  \_\   https://github.com/pedrorrivero
+#
 
-## ---- LOG FILES ---- ##
+# ---------------------------------------- #
+#                LOG FILES                 #
+# ---------------------------------------- #
 
 if [ -e '/usr/local/bin/prr-backup-bin' ]; then
   # AFTER INSTALLATION THIS WILL BE USED
@@ -22,9 +27,13 @@ LOG_DIRECTORY=$(get_realpath "$LOG_PATH/$LOG_DIRECTORY_NAME")
 LOG_FILE="$LOG_DIRECTORY/$LOG_FILENAME"
 
 
-## ---- LOG FUNCTIONS ---- ##
+# ---------------------------------------- #
+#              LOG FUNCTIONS               #
+# ---------------------------------------- #
 
-# Uses log
+## ---- NEW SUBDIRECTORY LOG ---- ##
+# DEPENDENCIES: loggers
+
 new_subdirectory_log () {
   # PARSING
   local subdirectory="$1"
@@ -37,7 +46,10 @@ new_subdirectory_log () {
   stdout_log_echo "$color" "$highlight" "$log"
 }
 
-# Uses log
+
+## ---- BACKUP LOG ---- ##
+# DEPENDENCIES: loggers
+
 backup_log () {
   # PARSING
   local SOURCE_DIR="$1"
@@ -51,7 +63,10 @@ backup_log () {
   backup_log_echo "$color" "$highlight" "$log"
 }
 
-# Uses log
+
+## ---- FILE LOG ---- ##
+# DEPENDENCIES: loggers
+
 file_log () {
   # PARSING
   local source="$1"
@@ -65,7 +80,10 @@ file_log () {
   stdout_log_echo "$color" "$highlight" "$log"
 }
 
-# Uses log
+
+## ---- OVERRIDE LOG ---- ##
+# DEPENDENCIES: loggers
+
 override_log () {
   # PARSING
   local backup="$1"
@@ -78,7 +96,10 @@ override_log () {
   stdout_log_echo "$color" "$highlight" "$log"
 }
 
-# Uses log
+
+## ---- WIPE LOG ---- ##
+# DEPENDENCIES: loggers
+
 wipe_log () {
   # PARSING
   local BACKUP_DIR="$1"
@@ -90,7 +111,10 @@ wipe_log () {
   stdout_log_echo "$color" "$highlight" "$log"
 }
 
-# Uses log
+
+## ---- WARNING LOG ---- ##
+# DEPENDENCIES: loggers
+
 warning_log () {
   # PARSING
   local message="$1"
@@ -101,7 +125,10 @@ warning_log () {
   stderr_log_echo "$color" "$highlight" "$message"
 }
 
-# Uses log
+
+## ---- ERROR LOG ---- ##
+# DEPENDENCIES: loggers
+
 error_log () {
   # PARSING
   local message="$1"
@@ -113,9 +140,13 @@ error_log () {
 }
 
 
-## ---- LOG ECHOS ---- ##
+# ---------------------------------------- #
+#                LOG ECHOS                 #
+# ---------------------------------------- #
 
-# Uses global options and log
+## ---- BACKUP LOG ECHO ---- ##
+# DEPENDENCIES: GLOBAL
+
 backup_log_echo () {
   # PARSING
   local color="$1"
@@ -128,7 +159,10 @@ backup_log_echo () {
   fi
 }
 
-# Uses global options and log
+
+## ---- STDOUT LOG ECHO ---- ##
+# DEPENDENCIES: GLOBAL
+
 stdout_log_echo () {
   # PARSING
   local color="$1"
@@ -143,7 +177,10 @@ stdout_log_echo () {
   fi
 }
 
-# Uses global options and log
+
+## ---- STDERR LOG ECHO ---- ##
+# DEPENDENCIES: GLOBAL
+
 stderr_log_echo () {
   # PARSING
   local color="$1"

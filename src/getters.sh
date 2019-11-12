@@ -1,11 +1,19 @@
 #!/usr/local/bin/bash
 
+#    _____  _____
+#   |  __ \|  __ \    AUTHOR: Pedro Rivero
+#   | |__) | |__) |   ---------------------------------
+#   |  ___/|  _  /    DATE: November 12, 2019
+#   | |    | | \ \    ---------------------------------
+#   |_|    |_|  \_\   https://github.com/pedrorrivero
+#
+
 # ---------------------------------------- #
-# Programer: PEDRO RIVERO
-# Date: Nov 4 2019
+#                FUNCTIONS                 #
 # ---------------------------------------- #
 
-## ---- FUNCTIONS ---- ##
+## ---- GET SORTED TREE ---- ##
+# DEPENDENCIES:
 
 get_sorted_tree () {
   # PARSING
@@ -20,17 +28,26 @@ get_sorted_tree () {
 }
 
 
+## ---- GET ARRAY SIZE ---- ##
+# DEPENDENCIES:
+
 get_array_size () {
   #TODO
   :
 }
 
 
+## ---- GET REALPATH ---- ##
+# DEPENDENCIES:
+
 get_realpath() {
   local path="$(echo "$1" | awk '{ gsub("/*$",""); print }')"
   [[ "$path" = /* ]] && echo "$path" || echo "$PWD/${path#./}"
 }
 
+
+## ---- GET RELATIVE PATH ---- ##
+# DEPENDENCIES:
 
 get_relative_path () {
   # PARSING
@@ -40,7 +57,10 @@ get_relative_path () {
   echo "${path}" | awk '{ gsub("^'"${BASE_DIR}"'",""); gsub("^\/*",""); print }'
 }
 
-# Uses checker and getter
+
+## ---- GET BACKUP PATH ---- ##
+# DEPENDENCIES: checkers, getters
+
 get_backup_path () {
   # PARSING
   local source="$1"
@@ -53,6 +73,10 @@ get_backup_path () {
     return 1
   fi
 }
+
+
+## ---- GET ESCAPED STRING ---- ##
+# DEPENDENCIES:
 
 get_escaped_string () {
   # PARSING

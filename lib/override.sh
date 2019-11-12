@@ -1,13 +1,20 @@
 #!/usr/local/bin/bash
 
+#    _____  _____
+#   |  __ \|  __ \    AUTHOR: Pedro Rivero
+#   | |__) | |__) |   ---------------------------------
+#   |  ___/|  _  /    DATE: November 12, 2019
+#   | |    | | \ \    ---------------------------------
+#   |_|    |_|  \_\   https://github.com/pedrorrivero
+#
+
 # ---------------------------------------- #
-# Programer: PEDRO RIVERO
-# Date: Nov 4 2019
+#                  MODULE                  #
 # ---------------------------------------- #
 
-## ---- FUNCTIONS ---- ##
+## ---- OVERRIDE REQUESTERD SUBDIRECTORIES ---- ##
+# DEPENDENCIES: GLOBAL, getters, loggers, Overrride
 
-# Uses global options, getters, loggers and overrride
 override_requested_subdirecrories () {
   # PARSING
   local SOURCE_DIR="$1"
@@ -30,7 +37,9 @@ override_requested_subdirecrories () {
 }
 
 
-# Uses global options and prompter
+## ---- OVERRIDE IF WET ---- ##
+# DEPENDENCIES: GLOABL, prompters
+
 override_if_wet () {
   # PARSING
   local target="$1"

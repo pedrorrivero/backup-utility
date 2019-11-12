@@ -1,13 +1,20 @@
 #!/usr/local/bin/bash
 
+#    _____  _____
+#   |  __ \|  __ \    AUTHOR: Pedro Rivero
+#   | |__) | |__) |   ---------------------------------
+#   |  ___/|  _  /    DATE: November 12, 2019
+#   | |    | | \ \    ---------------------------------
+#   |_|    |_|  \_\   https://github.com/pedrorrivero
+#
+
 # ---------------------------------------- #
-# Programer: PEDRO RIVERO
-# Date: Nov 4 2019
+#                FUNCTIONS                 #
 # ---------------------------------------- #
 
-## ---- FUNCTIONS ---- ##
+## ---- ASK CONFIRMATION ---- ##
+# DEPENDENCIES: GLOBAL, prompters
 
-# Uses global options and prompter
 ask_confirmation () {
   # PARSING
   local message="$1"
@@ -22,7 +29,10 @@ ask_confirmation () {
   fi
 }
 
-# Uses etc
+
+## ---- CONFIRM ANSWER ---- ##
+# DEPENDENCIES: etc
+
 confirm_answer () {
   # PARSING
   local confirmation="$1"

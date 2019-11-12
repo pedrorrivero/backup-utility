@@ -1,13 +1,20 @@
 #!/usr/local/bin/bash
 
+#    _____  _____
+#   |  __ \|  __ \    AUTHOR: Pedro Rivero
+#   | |__) | |__) |   ---------------------------------
+#   |  ___/|  _  /    DATE: November 12, 2019
+#   | |    | | \ \    ---------------------------------
+#   |_|    |_|  \_\   https://github.com/pedrorrivero
+#
+
 # ---------------------------------------- #
-# Programer: PEDRO RIVERO
-# Date: Nov 4 2019
+#                  MODULE                  #
 # ---------------------------------------- #
 
-## ---- FUNCTIONS ---- ##
+## ---- WIPE BACKUP IF REQUESTED ---- ##
+# DEPENDENCIES: GLOBAL, loggers, prompters
 
-# Uses global options, loggers and prompters
 wipe_backup_if_requested () {
   # PARSING
   local target="$1"

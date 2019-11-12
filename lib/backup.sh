@@ -1,13 +1,20 @@
 #!/usr/local/bin/bash
 
+#    _____  _____
+#   |  __ \|  __ \    AUTHOR: Pedro Rivero
+#   | |__) | |__) |   ---------------------------------
+#   |  ___/|  _  /    DATE: November 12, 2019
+#   | |    | | \ \    ---------------------------------
+#   |_|    |_|  \_\   https://github.com/pedrorrivero
+#
+
 # ---------------------------------------- #
-# Programer: PEDRO RIVERO
-# Date: Nov 4 2019
+#                  MODULE                  #
 # ---------------------------------------- #
 
-## ---- FUNCTIONS ---- ##
+## ---- DO BACKUP ---- ##
+# DEPENDENCIES: getters, loggers, Backup
 
-# Uses backup, getters and loggers
 do_backup () {
   # PARSING
   local SOURCE_DIR="$1"
@@ -33,7 +40,10 @@ do_backup () {
   unset IFS
 }
 
-# Uses global options, checkers, getters and loggers
+
+## ---- BACKUP IF NEW ---- ##
+# DEPENDENCIES: GLOBAL, checkers, getters, loggers
+
 backup_if_new () {
   # PARSING
   local source="$1"
