@@ -3,7 +3,7 @@
 #    _____  _____
 #   |  __ \|  __ \    AUTHOR: Pedro Rivero
 #   | |__) | |__) |   ---------------------------------
-#   |  ___/|  _  /    DATE: November 12, 2019
+#   |  ___/|  _  /    DATE: November 13, 2019
 #   | |    | | \ \    ---------------------------------
 #   |_|    |_|  \_\   https://github.com/pedrorrivero
 #
@@ -13,15 +13,14 @@
 # ---------------------------------------- #
 
 ## ---- INIT BACKUP MODE ---- ##
-# DEPENDENCIES: setters, Init
+# DEPENDENCIES: setters, loggers, Init
 
 init_backup_mode () {
-  # FUNCTIONALITY
   tabs 4
   reset_options
   argument_parser $@
   create_log_file
-  echo_backup_briefing
+  briefing_log
 }
 
 
@@ -123,24 +122,10 @@ verify_overrides
 # DEPENDENCIES: GLOBAL
 
 create_log_file () {
-  if [ ! -z "$LOG" ]; then
+  if [ -n "$LOG" ]; then
     mkdir "$LOG_DIRECTORY" 2> /dev/null
     touch "$LOG_FILE" 2> /dev/null
   fi
-}
-
-
-## ---- ECHO BACKUP BRIEFING ---- ##
-# DEPENDENCIES:
-
-echo_backup_briefing () {
-  echo -e "\n$(tput setab 4)BACKUP BRIEFING$(tput sgr 0)"
-  IFS=$'\n'
-  local number_of_directories="${#DIRECTORY_PAIRS[@]}"
-  for (( i = 0; i < $number_of_directories; i+=2 )); do
-    echo "    ${DIRECTORY_PAIRS[$i]} $(tput setaf 4)->$(tput sgr 0) ${DIRECTORY_PAIRS[$i+1]}"
-  done
-  unset IFS
 }
 
 

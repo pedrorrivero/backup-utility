@@ -3,7 +3,7 @@
 #    _____  _____
 #   |  __ \|  __ \    AUTHOR: Pedro Rivero
 #   | |__) | |__) |   ---------------------------------
-#   |  ___/|  _  /    DATE: November 12, 2019
+#   |  ___/|  _  /    DATE: November 13, 2019
 #   | |    | | \ \    ---------------------------------
 #   |_|    |_|  \_\   https://github.com/pedrorrivero
 #
@@ -22,7 +22,7 @@ override_requested_subdirecrories () {
   # FUNCTIONALITY
   local target=''
   for subdirectory in "${OVERRIDE[@]}"; do
-    target=$(get_backup_path "$subdirectory" "$SOURCE_DIR" "$BACKUP_DIR")
+    target="$(get_backup_path "$subdirectory" "$SOURCE_DIR" "$BACKUP_DIR")"
     if [ -z "$target" ]; then
       :
     elif [ -e "$target" ]; then

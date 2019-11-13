@@ -3,7 +3,7 @@
 #    _____  _____
 #   |  __ \|  __ \    AUTHOR: Pedro Rivero
 #   | |__) | |__) |   ---------------------------------
-#   |  ___/|  _  /    DATE: November 12, 2019
+#   |  ___/|  _  /    DATE: November 13, 2019
 #   | |    | | \ \    ---------------------------------
 #   |_|    |_|  \_\   https://github.com/pedrorrivero
 #
@@ -19,21 +19,12 @@ get_sorted_tree () {
   # PARSING
   local BASE_DIR="$1"
   # FUNCTIONALITY
-  if [ ! -z "$HIDDEN" ]; then
+  if [ -n "$HIDDEN" ]; then
     local tree=$(find "${BASE_DIR}" | sort)
   else
     local tree=$(find "${BASE_DIR}" -not -path '*/\.*' | sort)
   fi
   echo "$tree"
-}
-
-
-## ---- GET ARRAY SIZE ---- ##
-# DEPENDENCIES:
-
-get_array_size () {
-  #TODO
-  :
 }
 
 

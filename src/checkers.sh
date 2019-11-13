@@ -3,7 +3,7 @@
 #    _____  _____
 #   |  __ \|  __ \    AUTHOR: Pedro Rivero
 #   | |__) | |__) |   ---------------------------------
-#   |  ___/|  _  /    DATE: November 12, 2019
+#   |  ___/|  _  /    DATE: November 13, 2019
 #   | |    | | \ \    ---------------------------------
 #   |_|    |_|  \_\   https://github.com/pedrorrivero
 #
@@ -22,15 +22,6 @@ is_even (){
   else
     return 0  #TRUE
   fi
-}
-
-
-## ---- IS SET ---- ##
-# DEPENDENCIES:
-
-is_set () {
-  #TODO
-  :
 }
 
 

@@ -48,7 +48,7 @@ source "${DIR_PATH}/src/setters.sh"
 
 prr-backup () {
 
-  # There are issues when inputing a path with spaces
+  # There are issues when inputing a path with spaces as arg
   init_backup_mode $@
 
   for (( i=0; i<${#DIRECTORY_PAIRS[@]}; i+=2 )); do

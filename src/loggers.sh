@@ -3,7 +3,7 @@
 #    _____  _____
 #   |  __ \|  __ \    AUTHOR: Pedro Rivero
 #   | |__) | |__) |   ---------------------------------
-#   |  ___/|  _  /    DATE: November 12, 2019
+#   |  ___/|  _  /    DATE: November 13, 2019
 #   | |    | | \ \    ---------------------------------
 #   |_|    |_|  \_\   https://github.com/pedrorrivero
 #
@@ -30,6 +30,33 @@ LOG_FILE="$LOG_DIRECTORY/$LOG_FILENAME"
 # ---------------------------------------- #
 #              LOG FUNCTIONS               #
 # ---------------------------------------- #
+
+## ---- LOG BACKUP BRIEFING ---- ##
+# DEPENDENCIES: GLOBAL
+
+briefing_log () {
+  local color='4'
+  local highlight="\n$(tput setab 7)$(tput rev)BACKUP BRIEFING"
+  local log=""
+
+  backup_log_echo "$color" "$highlight" "$log"
+
+  # Reset
+  highlight=""
+  log=""
+
+  # Loop through all requested backups
+  IFS=$'\n'
+  local number_of_directories="${#DIRECTORY_PAIRS[@]}"
+
+  for (( i = 0; i < $number_of_directories; i+=2 )); do
+    log="    ${DIRECTORY_PAIRS[$i]} $(tput setaf "$color")->$(tput sgr 0) ${DIRECTORY_PAIRS[$i+1]}"
+    backup_log_echo "$color" "$highlight" "$log"
+  done
+
+  unset IFS
+}
+
 
 ## ---- NEW SUBDIRECTORY LOG ---- ##
 # DEPENDENCIES: loggers
@@ -154,7 +181,7 @@ backup_log_echo () {
   local log="$3"
   # FUNCTIONALITY
   echo -e "$(tput setaf $color)$highlight$(tput sgr 0)$log"
-  if [ ! -z "$LOG" ]; then
+  if [ -n "$LOG" ]; then
     echo -e "$highlight$log" >> $LOG_FILE
   fi
 }
@@ -172,7 +199,7 @@ stdout_log_echo () {
   if [ -z "$QUIET" ]; then
     echo -e "$(tput setaf $color)$highlight$(tput sgr 0)$log"
   fi
-  if [ ! -z "$LOG" ]; then
+  if [ -n "$LOG" ]; then
     echo -e "$highlight$log" >> $LOG_FILE
   fi
 }
@@ -189,7 +216,7 @@ stderr_log_echo () {
   # FUNCTIONALITY
   echo -e "$(tput setab 1)$(tput setaf 7)$highlight$(tput sgr 0)"\
   "$(tput setaf $color)$message$(tput sgr 0)" >&2
-  if [ ! -z "$LOG" ]; then
+  if [ -n "$LOG" ]; then
     echo -e "$highlight$message" >> $LOG_FILE
   fi
 }
