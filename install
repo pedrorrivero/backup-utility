@@ -21,8 +21,8 @@ else
   source 'uninstall' &>/dev/null
 fi
 
-if [ ! -e "${BIN_NAME}.sh" ]; then
-  echo "ERROR: Missing file '${BIN_NAME}.sh'." >&2
+if [ ! -e "${BIN_NAME}.${BIN_EXTENSION}" ]; then
+  echo "ERROR: Missing file '${BIN_NAME}.${BIN_EXTENSION}'." >&2
   echo "Please run this installation from within its parent directory: './install'." >&2
 
 elif [ ! -e "./lib/backup.sh" ]; then
@@ -71,10 +71,10 @@ elif [ ! -e "./src/setters.sh" ]; then
 
 else
 
-  chmod 766 "${BIN_NAME}.sh"
+  chmod 766 "${BIN_NAME}.${BIN_EXTENSION}"
 
-  ln -s "${PWD}" ${DIR_PATH}
-  ln -s "${PWD}/${BIN_NAME}.sh" ${BIN_PATH}
+  ln -s "${PWD}" "${DIR_PATH}"
+  ln -s "${PWD}/${BIN_NAME}.${BIN_EXTENSION}" "${BIN_PATH}"
 
   echo "Succesful installation of ${BIN_NAME}!"
 

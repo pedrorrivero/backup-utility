@@ -13,6 +13,7 @@
 # ---------------------------------------- #
 
 BIN_NAME='prr-backup'
+BIN_EXTENSION='sh'
 DIR_NAME='bin'
 INSTALLATION_LOCATION='/usr/local/bin'
 
@@ -24,7 +25,7 @@ DIR_PATH="${INSTALLATION_LOCATION}/${BIN_NAME}-${DIR_NAME}"
 #                UNINSTALL                 #
 # ---------------------------------------- #
 
-rm -rf ${BIN_PATH} 2>/dev/null
-rm -rf ${DIR_PATH} 2>/dev/null
+rm -rf "${BIN_PATH}" 2>/dev/null
+rm -rf "${DIR_PATH}" 2>/dev/null
 
 echo "Succesful uninstall of ${BIN_NAME}!"
