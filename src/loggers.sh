@@ -21,7 +21,7 @@ else
 fi
 
 LOG_DIRECTORY_NAME='logs'
-LOG_FILENAME="$(date -u '+%Y-%m-%dT%H:%M:%SZ.log')"
+LOG_FILENAME="$(date -u '+%Y-%m-%dT%H:%M:%S.000Z.log')"
 
 LOG_DIRECTORY=$(get_realpath "$LOG_PATH/$LOG_DIRECTORY_NAME")
 LOG_FILE="$LOG_DIRECTORY/$LOG_FILENAME"
