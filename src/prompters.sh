@@ -22,7 +22,7 @@ ask_confirmation () {
   local confirmation=''
   if [ -z "$FORCE" ]; then
     while ! confirm_answer "$confirmation"; do
-      read -p " $1 [y/n]: " confirmation
+      read -p " $message [y/n]: " confirmation
     done
   fi
 }
